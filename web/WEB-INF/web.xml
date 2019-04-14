@@ -3,13 +3,24 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
-    <!--<servlet>-->
-        <!--<servlet-name>Faces Servlet</servlet-name>-->
-        <!--<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>-->
-        <!--<load-on-startup>1</load-on-startup>-->
-    <!--</servlet>-->
-    <!--<servlet-mapping>-->
-        <!--<servlet-name>Faces Servlet</servlet-name>-->
-        <!--<url-pattern>*.xhtml</url-pattern>-->
-    <!--</servlet-mapping>-->
+    <welcome-file-list>
+        <welcome-file>login.html</welcome-file>
+    </welcome-file-list>
+    <!-- springmvc需要在web里面配一个dispacther-servlet -->
+    <servlet>
+        <servlet-name>spring</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:spring-servlet.xml</param-value>
+        </init-param>
+        <!--配置成1代表启动时初始化Servlet-->
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <!-- 你想把配置文件写道web-inf下,配置文件的规范一定是 和我的servletname一模一样  后缀是 -servlet -->
+        <servlet-name>spring</servlet-name>
+        <url-pattern>/</url-pattern> <!-- 全拦截 -->
+    </servlet-mapping>
 </web-app>
