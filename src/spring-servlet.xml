@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:mvc="http://www.springframework.org/schema/mvc"
+	   xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	   xmlns:jee="http://www.springframework.org/schema/jee"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:tx="http://www.springframework.org/schema/tx"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context.xsd
+http://www.springframework.org/schema/mvc
+http://www.springframework.org/schema/mvc/spring-mvc.xsd
+http://www.springframework.org/schema/tx
+http://www.springframework.org/schema/tx/spring-tx.xsd
+http://www.springframework.org/schema/aop
+http://www.springframework.org/schema/aop/spring-aop.xsd">
+	<!-- 这样一部
+       1:去copy包头 包头必须有context bean
+       2:去copyc3p0做的数据源
+       3：把myabtis的 sessionfactory交给 spring托管 同时把数据源属性的方式注入
+       4: 扫描dao接口 让接口与mapper.xml文件进绑定
+       5:扫描我们自己写的package 实现实例化
+
+    -->
+	<!-- 启用注解 -->
+	<context:annotation-config></context:annotation-config>
+	<!-- 扫描 -->
+	<context:component-scan base-package="com.yang"></context:component-scan>
+	<!-- 启用aop aspectj 自动代理,把xlmns\xsi加进去-->
+	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+	<!-- 数据库配置文件 -->
+	<context:property-placeholder location="classpath:/db.properties"/>
+	<!-- 这叫数据源 -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<!-- 指定连接数据库的驱动 -->
+		<property name="driverClass" value="${driverClass}"/>
+		<!-- 指定连接数据库的URL -->
+		<property name="jdbcUrl" value="${jdbcUrl}"/>
+		<!-- 指定连接数据库的用户名 -->
+		<property name="user" value="${user}"/>
+		<!-- 指定连接数据库的密码 -->
+		<property name="password" value="${password}"/>
+		<!-- 指定连接池中保留的最大连接数. Default:15 -->
+		<property name="maxPoolSize" value="20"/>
+		<!-- 指定连接池中保留的最小连接数 -->
+		<property name="minPoolSize" value="5"/>
+	</bean>
+
+	<!-- 把myabtis的 sessionfactory交给 spring托管 同时把数据源以属性的方式注入-->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- 数据源 -->
+		<property name="dataSource" ref="dataSource"></property>
+		<!-- 别名 ,把这个包下面的类都设置为开头小写的别名(Person->person) -->
+		<property name="typeAliasesPackage" value="com.yang.entity"></property>
+		<!-- 加载mybatis映射文件,sql映射文件路径 -->
+		<property name="mapperLocations" value="classpath*:com/yang/mapper/*Mapper.xml"></property>
+	</bean>
+
+	<!--dao接口和mapper的绑定 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!--指定会话工厂，如果当前上下文中只定义了一个则该属性可省去 -->
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+		<!-- 指定要自动扫描接口的基础包，实现接口 -->
+		<property name="basePackage" value="com.yang.dao"></property>
+	</bean>
+	<!--<bean id="PersonService" class="com.zlt.service.impl.PersonServiceImpl"></bean>-->
+
+</beans>
