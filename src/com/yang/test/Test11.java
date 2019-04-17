@@ -14,7 +14,7 @@ public class Test11 {
     @Test
     public void test1()
     {
-        ApplicationContext ac = new ClassPathXmlApplicationContext("spring-servlet.xml");
+        ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");
         UserService us = (UserService) ac.getBean("userServiceImpl");
         User user = us.getUser(1);
         System.out.println(user.getName());

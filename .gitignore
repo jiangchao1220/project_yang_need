@@ -1,3 +1,5 @@
 [root@kevin ~]# cat .gitignore
 *.iml
 /web/WEB-INF/classes/
+/.idea/
+/out/
