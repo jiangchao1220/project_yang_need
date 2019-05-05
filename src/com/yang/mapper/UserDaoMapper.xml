@@ -12,6 +12,18 @@
 		UPDATE user SET password=#{password} WHERE name=#{name}
 	</update>
 
+	<select id="loginUser" resultType="user">
+		SELECT * FROM `user` WHERE name=#{name} AND `password`=#{password}
+	</select>
+
+	<select id="findUserByUaseName" resultType="user">
+		SELECT * FROM `user` WHERE name=#{name}
+	</select>
+
+	<insert id="addNewUser" parameterType="com.yang.entity.User">
+		INSERT INTO `user`(name, password) VALUES (#{name}, #{password})
+	</insert>
+
 	<!--<delete id="delPersonById" parameterType="int">-->
 		<!--DELETE from person WHERE pid=#{pid}-->
 	<!--</delete>-->

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC   
+    "-//mybatis.org//DTD Mapper 3.0//EN"  
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yang.dao.HouseDao">
+	<resultMap id="BaseHouseMap" type="com.yang.entity.IndexHouseInfo">
+		<id column="house_info" jdbcType="INTEGER" property="houseInfo" />
+		<result column="house_number" jdbcType="VARCHAR" property="houseNumber" />
+		<result column="house_type" jdbcType="VARCHAR" property="houseType" />
+		<result column="house_decorationtype" jdbcType="VARCHAR" property="decorationType" />
+		<result column="house_price" jdbcType="VARCHAR" property="housePrice" />
+		<result column="house_details" jdbcType="VARCHAR" property="houseDetails" />
+	</resultMap>
+
+	<resultMap id="HouseMap" type="com.yang.entity.House">
+		<id column="house_id" jdbcType="INTEGER" property="houseId" />
+		<result column="house_number" jdbcType="VARCHAR" property="houseNumber" />
+		<result column="house_type" jdbcType="VARCHAR" property="houseType" />
+		<result column="house_decorationtype" jdbcType="VARCHAR" property="houseDecorationtype" />
+		<result column="house_price" jdbcType="VARCHAR" property="housePrice" />
+		<result column="house_details" jdbcType="VARCHAR" property="houseDetails" />
+		<result column="house_info" jdbcType="VARCHAR" property="houseInfo" />
+		<result column="house_area" jdbcType="VARCHAR" property="houseArea" />
+		<result column="house_towards" jdbcType="VARCHAR" property="houseTowards" />
+		<result column="house_floor" jdbcType="VARCHAR" property="houseFloor" />
+		<result column="house_address" jdbcType="VARCHAR" property="houseAddress" />
+		<result column="type" jdbcType="VARCHAR" property="type" />
+		<result column="house_details" jdbcType="VARCHAR" property="houseDetails" />
+		<result column="introduced" jdbcType="VARCHAR" property="introduced" />
+		<result column="location" jdbcType="VARCHAR" property="houseLocation" />
+		<result column="publisher" jdbcType="VARCHAR" property="publisher" />
+		<result column="publish_date" jdbcType="VARCHAR" property="publishDate" />
+	</resultMap>
+
+	<select id="findHouseByType" resultMap="BaseHouseMap">
+		SELECT * FROM house WHERE type=#{arg0}
+	</select>
+
+	<select id="getHouseImges" resultType="String">
+		SELECT img_path FROM img WHERE house_number=#{arg0}
+	</select>
+
+	<select id="getHouseDetailsOutwithImages" resultMap="HouseMap">
+		SELECT * FROM house WHERE house_number=#{arg0}
+	</select>
+
+	<select id="getAllHouseByType" resultMap="HouseMap">
+		SELECT * FROM house WHERE type=#{arg0}
+	</select>
+
+	<select id="getAllHouseByTypeAndTime" resultMap="HouseMap">
+		SELECT * from house WHERE type=#{arg0} AND publish_date BETWEEN #{arg1} AND #{arg2}
+	</select>
+
+</mapper>
+

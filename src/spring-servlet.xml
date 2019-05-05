@@ -1,35 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
-	   xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
-	   xmlns:context="http://www.springframework.org/schema/context"
-	   xmlns:mvc="http://www.springframework.org/schema/mvc"
-	   xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd
         http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
 
-	<context:annotation-config/>
-	<!-- 使用annotation自动注册bean,并保证@Required,@Autowired的属性被注入 -->
-	<context:component-scan base-package="com.yang.controller">
-		<context:include-filter type="annotation"
-								expression="org.springframework.stereotype.Controller"/>
-	</context:component-scan>
+    <context:annotation-config/>
+    <!-- 使用annotation自动注册bean,并保证@Required,@Autowired的属性被注入 -->
+    <context:component-scan base-package="com.yang.controller">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
 
-	<mvc:annotation-driven />
+    <mvc:annotation-driven/>
 
-	<mvc:default-servlet-handler />
-
-	<!-- 对模型视图名称的解析，即在模型视图名称添加前后缀 -->
-	<bean
-			class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="viewClass"
-				  value="org.springframework.web.servlet.view.JstlView" />
-		<property name="prefix" value="/WEB-INF/html/" />
-		<property name="suffix" value=".html" />
-		<!--可为空,方便实现自已的依据扩展名来选择视图解释类的逻辑 -->
-	</bean>
-	<!-- 支持JSON数据格式等其他配置，根据项目不同自行配即可 -->
+    <!-- 将无法mapping到Controller的path交给default servlet handler处理 -->
+    <!-- 这样会在 SpringMVC 上下文中定义一个 org.springframework.web.servlet.
+    resource.DefaultServletHttpRquestHandler，其会对进入 DispatcherServlet
+    的URL 进行筛选，若发现是静态资源请求，则转由 Web 应用服务器默认的 Servlet
+     处理，如果不是静态资源的请求，才由 DispatcherServlet 继续处理一般 Web 应用服务器
+      (包括 Tomcat、Jetty等)  默认Servlet名称都是 default，因此 
+      DefaultServletHttpRquestHandler 可以找到。如果使用的 Web 应用服务器的默认 Servlet
+       名称不是 “default"，则需要通过 default-servlet-name 属性显式指定 :
+<mvc:default-servlet-handler default-servlet-name="yourServerDefaultServletName"/>-->
+    <mvc:default-servlet-handler/>
+    <!-- web.xml中配置全拦截时,对静态资源进行静态资源过滤
+    <mvc:resources mapping="/jsp/images/**" location="/jsp/images"></mvc:resources>
+    <mvc:resources mapping="/jsp/js/**" location="/jsp/js"></mvc:resources>
+    <mvc:resources mapping="/jsp/css/**" location="/jsp/css"></mvc:resources>-->
+    <!-- 对模型视图名称的解析，即在模型视图名称添加前后缀 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+        <property name="prefix" value="/jsp/"/>
+        <property name="suffix" value=".jsp"/>
+        <!--可为空,方便实现自已的依据扩展名来选择视图解释类的逻辑 -->
+    </bean>
+    <!-- 支持JSON数据格式等其他配置，根据项目不同自行配即可 -->
 </beans>

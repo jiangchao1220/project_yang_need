@@ -24,5 +24,34 @@ public class UserServiceImpl implements UserService {
         return userDao.updateUser(user);
     }
 
+    @Override
+    public User loginUser(User user) {
+
+        User u =null;
+        u=userDao.loginUser(user);
+        return u;
+    }
+
+    @Override
+    public int findUserByName(String username) {
+        User user = userDao.findUserByUaseName(username);
+        if (user != null){
+            return 1;
+        }
+        else {
+            return 0;
+        }
+    }
+
+    @Override
+    public boolean addNewUser(User user) {
+        int success = userDao.addNewUser(user);
+        if (success == 1){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 
 }

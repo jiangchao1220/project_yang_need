@@ -16,4 +16,13 @@ public interface UserDao {
 
     //刷新用户数据
     int updateUser(User user);
+
+    //用户登录
+    User loginUser(User user);
+
+    //查询用户
+    User findUserByUaseName(String username);
+
+    //新增用户
+    int addNewUser(User user);
 }

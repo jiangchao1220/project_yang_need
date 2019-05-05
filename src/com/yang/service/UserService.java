@@ -12,4 +12,13 @@ public interface UserService
 
     //刷新密码
     int updateUser(User user);
+
+    //用户登录
+    User loginUser(User user);
+
+    //查询用户是否存在: 不存在0, 存在1
+    int findUserByName(String username);
+
+    //新增用户
+    boolean addNewUser(User user);
 }
