@@ -4,9 +4,9 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yang.dao.UserDao">
 
-	<select id="getUser" resultType="user">
+	<!--<select id="getUser" resultType="user">
 		SELECT * FROM user WHERE id=#{arg0}
-	</select>
+	</select>-->
 
 	<update id="updatePwd" parameterType="com.yang.entity.User">
 		UPDATE user SET password=#{password} WHERE name=#{name}
