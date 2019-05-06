@@ -24,6 +24,15 @@ import java.util.*;
 public class Test11 {
     //test
     @Test
+    public void testr1(){
+        ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");
+        HouseService hs = (HouseService) ac.getBean("houseServiceImpl");
+        UserService us = (UserService) ac.getBean("userServiceImpl");
+        int s = us.updatePassword("18684016465", "jc994128");
+        System.out.println(s);
+    }
+
+    @Test
     public void test1()
     {
         ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");

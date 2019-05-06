@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
@@ -79,7 +80,7 @@ public class UserController {
         user.setPassword(password);
         //校验是否存在用户名
         int vaildate = userService.findUserByName(username);
-        if (vaildate == 1){
+        if (vaildate == 1) {
             return "reg_failed";
         }
 
@@ -91,5 +92,24 @@ public class UserController {
             // 添加失败
             return "reg_failed";
         }
+    }
+
+    /**
+     * 修改密码
+     *
+     * @param httpSession httpSession
+     * @param password    密码
+     * @return isSuccess
+     */
+    @RequestMapping(value = "/**/updatePwssword", method = RequestMethod.GET)
+    @ResponseBody
+    public String updatePassword(HttpSession httpSession, String password) {
+        String userName = String.valueOf(httpSession.getAttribute("loginUser"));
+        int isSuccess = userService.updatePassword(userName, password);
+        if (isSuccess == 1){
+            //修改成功
+            httpSession.removeAttribute("loginUser");
+        }
+        return JsonUtil.toJSon(isSuccess);
     }
 }

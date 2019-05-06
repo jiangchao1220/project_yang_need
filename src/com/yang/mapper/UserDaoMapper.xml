@@ -8,7 +8,7 @@
 		SELECT * FROM user WHERE id=#{arg0}
 	</select>
 
-	<update id="updateUser" parameterType="com.yang.entity.User">
+	<update id="updatePwd" parameterType="com.yang.entity.User">
 		UPDATE user SET password=#{password} WHERE name=#{name}
 	</update>
 

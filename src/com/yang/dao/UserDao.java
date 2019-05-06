@@ -25,4 +25,7 @@ public interface UserDao {
 
     //新增用户
     int addNewUser(User user);
+
+    //修改密码
+    int updatePwd(User user);
 }

@@ -54,4 +54,13 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public int updatePassword(String userName, String password) {
+        User user = new User();
+        user.setName(userName);
+        user.setPassword(password);
+        int isSuccess = userDao.updatePwd(user);
+        return isSuccess;
+    }
+
 }

@@ -21,4 +21,7 @@ public interface UserService
 
     //新增用户
     boolean addNewUser(User user);
+
+    //修改密码
+    int updatePassword(String userName, String password);
 }
