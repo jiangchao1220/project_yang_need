@@ -35,7 +35,7 @@ public interface UserService {
      *
      * @param userName 用户名
      * @param password 新密码
-     * @return 修改的数据条数,0:刷新用户表数据失败, 1:刷新用户表数据成功
+     * @return 修改的数据条数, 0:刷新用户表数据失败, 1:刷新用户表数据成功
      */
     int updatePassword(String userName, String password);
 }

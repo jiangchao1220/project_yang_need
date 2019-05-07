@@ -52,5 +52,17 @@
 		SELECT * from house WHERE type=#{arg0} AND publish_date BETWEEN #{arg1} AND #{arg2}
 	</select>
 
+	<insert id="insertConcern">
+		INSERT INTO `user_concern`(username, house_number) VALUES (#{arg0}, #{arg1})
+	</insert>
+
+	<delete id="deleteConcern">
+		DELETE from user_concern WHERE username=#{arg0} AND house_number=#{arg1}
+	</delete>
+
+	<select id="findConcern" resultType="com.yang.entity.ConcernHouse">
+		SELECT * FROM `user_concern` WHERE username=#{arg0} AND house_number=#{arg1}
+	</select>
+
 </mapper>
 

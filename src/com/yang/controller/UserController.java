@@ -105,7 +105,7 @@ public class UserController {
     public String updatePassword(HttpSession httpSession, String password) {
         String userName = String.valueOf(httpSession.getAttribute("loginUser"));
         int isSuccess = userService.updatePassword(userName, password);
-        if (isSuccess == 1){
+        if (isSuccess == 1) {
             //修改成功
             httpSession.removeAttribute("loginUser");
         }

@@ -1,5 +1,6 @@
 package com.yang.dao;
 
+import com.yang.entity.ConcernHouse;
 import com.yang.entity.House;
 import com.yang.entity.IndexHouse;
 import com.yang.entity.IndexHouseInfo;
@@ -53,4 +54,13 @@ public interface HouseDao {
      * @return 房屋列表
      */
     List<House> getAllHouseByTypeAndTime(int type, String lastDate, String nowDate);
+
+    //查询该房屋是否已经存在关注表中
+    ConcernHouse findConcern(String username, int houseNumber);
+
+    //删除已关注的房屋
+    int deleteConcern(String username, int houseNumber);
+
+    //添加关注房屋
+    int insertConcern(String username, int houseNumber);
 }

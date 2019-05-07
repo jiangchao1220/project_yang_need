@@ -1,10 +1,7 @@
 package com.yang.service.impl;
 
 import com.yang.dao.HouseDao;
-import com.yang.entity.House;
-import com.yang.entity.HouseVO;
-import com.yang.entity.IndexHouse;
-import com.yang.entity.IndexHouseInfo;
+import com.yang.entity.*;
 import com.yang.model.HouseType;
 import com.yang.service.HouseService;
 import com.yang.util.DateUtil;
@@ -93,5 +90,38 @@ public class HouseServiceImpl implements HouseService {
         return houseVOList;
     }
 
+    @Override
+    public String concernHouse(int houseNumber, String username) {
+        //先查询是否存在关注
+        ConcernHouse concernHouse = houseDao.findConcern(username, houseNumber);
+        int delete = 0;
+        int insert = 0;
+        if (concernHouse != null) {
+            //存在,执行删除操作
+            delete = houseDao.deleteConcern(username, houseNumber);
+        } else {
+            //不存在,执行添加操作
+            insert = houseDao.insertConcern(username, houseNumber);
+        }
 
+        if (delete == 1) {
+            return "cancelConcern";
+        }
+        if (insert == 1) {
+            return "concern";
+        }
+        return "false";
+    }
+
+    @Override
+    public String checkConcern(int houseNumber, String username) {
+        ConcernHouse concernHouse = houseDao.findConcern(username, houseNumber);
+        if (concernHouse != null) {
+            //已关注
+            return "concern";
+        } else {
+            //未关注
+            return "notConcern";
+        }
+    }
 }

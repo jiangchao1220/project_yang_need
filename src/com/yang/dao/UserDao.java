@@ -1,5 +1,6 @@
 package com.yang.dao;
 
+import com.yang.entity.ConcernHouse;
 import com.yang.entity.User;
 import org.springframework.stereotype.Repository;
 

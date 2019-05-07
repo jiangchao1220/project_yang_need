@@ -42,4 +42,24 @@ public interface HouseService {
      * @return 房屋列表
      */
     List<HouseVO> getNewAddHouse(HouseType houseType);
+
+    /**
+     * 关注房源
+     *
+     * @param houseNumber 房屋编号
+     * @param username    用户名
+     * @return 状态
+     */
+    String concernHouse(int houseNumber, String username);
+
+    /**
+     * 查询是否已关注房源
+     *
+     * @param houseNumber 房屋编号
+     * @param username    用户名
+     * @return 状态
+     */
+    String checkConcern(int houseNumber, String username);
+
+
 }

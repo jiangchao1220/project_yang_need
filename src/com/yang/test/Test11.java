@@ -28,8 +28,10 @@ public class Test11 {
         ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");
         HouseService hs = (HouseService) ac.getBean("houseServiceImpl");
         UserService us = (UserService) ac.getBean("userServiceImpl");
-        int s = us.updatePassword("18684016465", "jc994128");
-        System.out.println(s);
+//        int s = us.updatePassword("18684016465", "jc994128");
+//        System.out.println(s);
+        String a = hs.concernHouse(1,"123");
+        System.out.println(a);
     }
 
     @Test

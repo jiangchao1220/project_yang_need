@@ -157,4 +157,36 @@ public class HouseController {
         List<HouseVO> houseList = houseService.getNewAddHouse(houseType);
         return JsonUtil.toJSon(houseList);
     }
+
+
+    /**
+     * 关注房源
+     *
+     * @param houseNumber 房屋编号
+     * @param username    用户名
+     * @return 状态
+     */
+    @RequestMapping(value = "/concernHouse", method = RequestMethod.GET)
+    @ResponseBody
+    public String userConcern(int houseNumber, String username) {
+        if (username == null){
+            return JsonUtil.toJSon("notlogin");
+        }
+        String state = houseService.concernHouse(houseNumber, username);
+        return JsonUtil.toJSon(state);
+    }
+
+    /**
+     * 查询是否已关注房源
+     *
+     * @param houseNumber 房屋编号
+     * @param username    用户名
+     * @return 状态
+     */
+    @RequestMapping(value = "/checkConcern", method = RequestMethod.GET)
+    @ResponseBody
+    public String checkConcern(int houseNumber, String username) {
+        String state = houseService.checkConcern(houseNumber, username);
+        return JsonUtil.toJSon(state);
+    }
 }
