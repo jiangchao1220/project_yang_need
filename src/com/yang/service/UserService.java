@@ -1,5 +1,6 @@
 package com.yang.service;
 
+import com.yang.entity.HouseVO;
 import com.yang.entity.User;
 
 /**

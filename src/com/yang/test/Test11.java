@@ -30,8 +30,14 @@ public class Test11 {
         UserService us = (UserService) ac.getBean("userServiceImpl");
 //        int s = us.updatePassword("18684016465", "jc994128");
 //        System.out.println(s);
-        String a = hs.concernHouse(1,"123");
-        System.out.println(a);
+//        String a = hs.concernHouse(1,"123");
+        HouseVO houseVO = hs.getHouseDetails(312737);
+        System.out.println(houseVO.getHouse().getPublisher()+" "+houseVO.getHouse().getPublisherPhone());
+        List<HouseVO> houseVOList = hs.findConcernHouses("18684016465");
+        for (HouseVO vo : houseVOList) {
+
+            System.out.println(vo.getHouse().getHouseInfo());
+        }
     }
 
     @Test

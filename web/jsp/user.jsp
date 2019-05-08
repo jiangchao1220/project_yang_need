@@ -20,6 +20,12 @@
                 $("#alogin").append("<a href='login.jsp'>登录</a>");
             }
         })
+
+        function loginout() {
+            var msg = "退出登录!"
+            var result = confirm(msg);
+
+        }
     </script>
 </head>
 
@@ -59,8 +65,7 @@
                     <dt class="vipIcon1">我的邻居大妈</dt>
                     <dd>
                         <a href="user_guanzhu.jsp">关注房源</a>
-                        <a href="user_shenqing.jsp">申请社区自由经纪人</a>
-                        <a href="user_jingji.jsp">社区自由经纪人</a>
+                        <a href="javascript:;" onclick="loginout()">退出登录</a>
                     </dd>
                 </dl>
             </div><!--vipNav/-->

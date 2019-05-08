@@ -5,6 +5,7 @@ import com.yang.entity.*;
 import com.yang.model.HouseType;
 import com.yang.service.HouseService;
 import com.yang.util.DateUtil;
+import com.yang.util.SortUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,14 +54,6 @@ public class HouseServiceImpl implements HouseService {
     @Override
     public List<HouseVO> getAllHouseByType(HouseType houseType) {
         List<House> houseList = houseDao.getAllHouseByType(houseType.getValue());
-//        List<HouseVO> houseVOList = new ArrayList<>();
-//        for (House house : houseList) {
-//            List<String> images = houseDao.getHouseImges(house.getHouseNumber());
-//            HouseVO houseVO = new HouseVO();
-//            houseVO.setHouse(house);
-//            houseVO.setHouseImages(images);
-//            houseVOList.add(houseVO);
-//        }
         return getHouseImages(houseList);
     }
 
@@ -111,6 +104,17 @@ public class HouseServiceImpl implements HouseService {
             return "concern";
         }
         return "false";
+    }
+
+    @Override
+    public List<HouseVO> findConcernHouses(String username) {
+        //查询当前用户关注的所有房屋编号
+        List<Integer> houseNumberList = houseDao.findAllConcernHouseNumber(username);
+        //批量查询house表
+        List<House> houseList = houseDao.findAllConcernHouse(houseNumberList);
+        //添加每所房屋图片列表
+        List<HouseVO> houseVOList = getHouseImages(houseList);
+        return SortUtil.sortByTime(houseVOList);
     }
 
     @Override

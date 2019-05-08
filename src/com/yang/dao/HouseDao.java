@@ -48,12 +48,28 @@ public interface HouseDao {
     /**
      * 根据房屋类型和指定时间段内查询
      *
-     * @param type 房屋类型
-     * @param nowDate 当前时间
+     * @param type     房屋类型
+     * @param nowDate  当前时间
      * @param lastDate 以前时间
      * @return 房屋列表
      */
     List<House> getAllHouseByTypeAndTime(int type, String lastDate, String nowDate);
+
+    /**
+     * 查询关注房屋编号列表
+     *
+     * @param username 用户名
+     * @return 房屋编号列表
+     */
+    List<Integer> findAllConcernHouseNumber(String username);
+
+    /**
+     * 通过编号批量查询房屋
+     *
+     * @param houseNumberList 房屋编号列表
+     * @return 房屋列表
+     */
+    List<House> findAllConcernHouse(List<Integer> houseNumberList);
 
     //查询该房屋是否已经存在关注表中
     ConcernHouse findConcern(String username, int houseNumber);

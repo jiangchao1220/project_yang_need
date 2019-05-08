@@ -52,7 +52,8 @@
                             + "㎡<br/> 朝向：" + data.house.houseTowards
                             + "<br/> 楼层：" + data.house.houseFloor
                             + "<br/> 装修：" + data.house.houseDecorationtype
-                            + "<br/> 地址：" + data.house.houseAddress;
+                            + "<br/> 地址：" + data.house.houseAddress
+                            + "<br/> <span style='color:red'>发布人信息：" + data.house.publisher +" 电话:" + data.house.publisherPhone + "</span>";
                         $("#proText1").append(text);
 
                         var proList = data.house.houseDetails + "<br/>";
@@ -82,7 +83,8 @@
                             + "㎡<br/> 朝向：" + data.house.houseTowards
                             + "<br/> 楼层：" + data.house.houseFloor
                             + "<br/> 装修：" + data.house.houseDecorationtype
-                            + "<br/> 地址：" + data.house.houseAddress;
+                            + "<br/> 地址：" + data.house.houseAddress
+                            + "<br/> <span style='color:red'>发布人信息：" + data.house.publisher +" 电话:" + data.house.publisherPhone +"</span>";
                         $("#proText1").append(text);
 
                         var proList = data.house.houseDetails + "<br/>";
@@ -112,7 +114,8 @@
                             + "㎡<br/> 朝向：" + data.house.houseTowards
                             + "<br/> 楼层：" + data.house.houseFloor
                             + "<br/> 装修：" + data.house.houseDecorationtype
-                            + "<br/> 地址：" + data.house.houseAddress;
+                            + "<br/> 地址：" + data.house.houseAddress
+                            + "<br/> <span style='color:red'>发布人信息：" + data.house.publisher +" 电话:" + data.house.publisherPhone + "</span> ";
                         $("#proText1").append(text);
 
                         var proList = data.house.houseDetails + "<br/>";

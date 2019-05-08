@@ -53,6 +53,14 @@ public interface HouseService {
     String concernHouse(int houseNumber, String username);
 
     /**
+     * 查询用户关注的房源
+     *
+     * @param username    用户名
+     * @return 房屋信息列表
+     */
+    List<HouseVO> findConcernHouses(String username);
+
+    /**
      * 查询是否已关注房源
      *
      * @param houseNumber 房屋编号

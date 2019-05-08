@@ -27,7 +27,7 @@
 
         function sub_username() {
             var loginCheck = <%=session.getAttribute("loginUser") %>;
-            if (loginCheck == null){
+            if (loginCheck == null) {
                 alert("请先登录!");
                 return;
             }
@@ -44,17 +44,17 @@
         }
 
         function comfirmValidate(newpassword, comfirmpwd) {
-            if (newpassword != comfirmpwd){
+            if (newpassword != comfirmpwd) {
                 $("#comfirm").append("密码不一致");
                 return false;
-            }else{
+            } else {
                 return true;
             }
         }
 
         function validate(pwd) {
             //校验不够严格,全字母可以通过校验
-            if (pwdverify.test(pwd)){
+            if (pwdverify.test(pwd)) {
                 return true;
             }
             else {
@@ -74,17 +74,23 @@
                 data: newPasswoed,
                 dataType: "JSON",
                 success: function (data) {
-                    if (data == 1){
+                    if (data == 1) {
                         //修改成功
                         alert("密码修改成功,请重新登录");
                         window.location = "login.jsp";
-                    }else {
+                    } else {
                         alert("密码修改失败,请稍后重试");
                     }
                 }, error: function () {
                     alert("ajax error!");
                 }
             });
+        }
+
+        function loginout() {
+            var msg = "退出登录!"
+            var result = confirm(msg);
+
         }
     </script>
 </head>
@@ -125,8 +131,7 @@
                     <dt class="vipIcon1">我的邻居大妈</dt>
                     <dd>
                         <a href="user_guanzhu.jsp">关注房源</a>
-                        <a href="user_shenqing.jsp">申请社区自由经纪人</a>
-                        <a href="user_jingji.jsp">社区自由经纪人</a>
+                        <a href="javascript:;" onclick="loginout()">退出登录</a>
                     </dd>
                 </dl>
             </div><!--vipNav/-->

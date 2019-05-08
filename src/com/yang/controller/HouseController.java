@@ -6,6 +6,7 @@ import com.yang.entity.IndexHouse;
 import com.yang.model.HouseType;
 import com.yang.service.impl.HouseServiceImpl;
 import com.yang.util.JsonUtil;
+import com.yang.util.SortUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -107,13 +108,13 @@ public class HouseController {
             default:
                 houseList = new ArrayList<>();
         }
-        Collections.sort(houseList, new Comparator<HouseVO>() {
-            @Override
-            public int compare(HouseVO o1, HouseVO o2) {
-                return (java.text.Collator.getInstance(Locale.CHINA)).compare(o2.getHouse().getPublishDate(),o1.getHouse().getPublishDate());
-            }
-        });
-        return JsonUtil.toJSon(houseList);
+//        Collections.sort(houseList, new Comparator<HouseVO>() {
+//            @Override
+//            public int compare(HouseVO o1, HouseVO o2) {
+//                return (java.text.Collator.getInstance(Locale.CHINA)).compare(o2.getHouse().getPublishDate(),o1.getHouse().getPublishDate());
+//            }
+//        });
+        return JsonUtil.toJSon(SortUtil.sortByTime(houseList));
     }
 
     /**
@@ -174,6 +175,23 @@ public class HouseController {
         }
         String state = houseService.concernHouse(houseNumber, username);
         return JsonUtil.toJSon(state);
+    }
+
+    /**
+     * 查询用户关注的房源
+     *
+     * @param username    用户名
+     * @return 房屋信息列表
+     */
+    @RequestMapping(value = "/findConcernHouse", method = RequestMethod.GET)
+    @ResponseBody
+    public String findConcernHouse(String username) {
+        System.out.println("关注房源:"+ username);
+        if (username == null){
+            return JsonUtil.toJSon("notlogin");
+        }
+        List<HouseVO> houseVOList = houseService.findConcernHouses(username);
+        return JsonUtil.toJSon(houseVOList);
     }
 
     /**

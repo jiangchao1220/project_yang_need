@@ -30,6 +30,7 @@
 		<result column="location" jdbcType="VARCHAR" property="houseLocation" />
 		<result column="publisher" jdbcType="VARCHAR" property="publisher" />
 		<result column="publish_date" jdbcType="VARCHAR" property="publishDate" />
+		<result column="publisher_phone" jdbcType="VARCHAR" property="publisherPhone" />
 	</resultMap>
 
 	<select id="findHouseByType" resultMap="BaseHouseMap">
@@ -62,6 +63,17 @@
 
 	<select id="findConcern" resultType="com.yang.entity.ConcernHouse">
 		SELECT * FROM `user_concern` WHERE username=#{arg0} AND house_number=#{arg1}
+	</select>
+
+	<select id="findAllConcernHouseNumber" resultType="int">
+		SELECT house_number FROM `user_concern` WHERE username=#{arg0}
+	</select>
+
+	<select id="findAllConcernHouse" parameterType="java.util.List" resultMap="HouseMap">
+		SELECT * FROM `house` WHERE house_number IN
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
 	</select>
 
 </mapper>
