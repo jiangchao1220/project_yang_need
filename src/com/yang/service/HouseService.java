@@ -69,5 +69,12 @@ public interface HouseService {
      */
     String checkConcern(int houseNumber, String username);
 
-
+    /**
+     * 取消关注房源
+     *
+     * @param houseNumber 房屋编号
+     * @param username    用户名
+     * @return 状态
+     */
+    String cancelConcern(int houseNumber, String username);
 }

@@ -90,7 +90,28 @@
         function loginout() {
             var msg = "退出登录!"
             var result = confirm(msg);
-
+            if (result) {
+                $.ajax({
+                    type: "GET",
+                    url: "..//loginOut/signOut.do",
+                    contentType: "application/json;charset=UTF-8",
+                    data: "",
+                    dataType: "JSON",
+                    success: function (data) {
+                        if (data == "signoutsuccess") {
+                            //退出成功
+                            alert("安全退出登录成功.");
+                            $("#alogin").empty();
+                            $("#alogin").append("<a href='login.jsp'>登录</a>");
+                            window.location = "user_pwd.jsp";
+                        } else {
+                            alert("您还未登录!");
+                        }
+                    }, error: function () {
+                        alert("ajax error!");
+                    }
+                });
+            }
         }
     </script>
 </head>

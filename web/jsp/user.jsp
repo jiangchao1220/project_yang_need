@@ -16,6 +16,8 @@
             var loginUser = <%=session.getAttribute("loginUser") %>;
             if (loginUser != null) {
                 $("#alogin").append("<a href='user.jsp'>" + loginUser + "</a>");
+                $("#phone").empty();
+                $("#phone").text(loginUser);
             } else {
                 $("#alogin").append("<a href='login.jsp'>登录</a>");
             }
@@ -24,7 +26,62 @@
         function loginout() {
             var msg = "退出登录!"
             var result = confirm(msg);
+            if (result) {
+                $.ajax({
+                    type: "GET",
+                    url: "..//loginOut/signOut.do",
+                    contentType: "application/json;charset=UTF-8",
+                    data: "",
+                    dataType: "JSON",
+                    success: function (data) {
+                        if (data == "signoutsuccess") {
+                            //退出成功
+                            alert("安全退出登录成功.");
+                            $("#alogin").empty();
+                            $("#alogin").append("<a href='login.jsp'>登录</a>");
+                            window.location = "user.jsp";
+                        } else {
+                            alert("您还未登录!");
+                        }
+                    }, error: function () {
+                        alert("ajax error!");
+                    }
+                });
+            }
+        }
 
+        function mod_member() {
+            var username = <%=session.getAttribute("loginUser") %>;
+            var phone = username;
+            var sex = $('input[name="sex"]:checked').val();
+            var name = $("#title").val();
+            var age = $("#age").val();
+            var qq = $("#qq").val();
+            var signtext = $("#sign").val();
+
+            var userInfo = {
+                "username": username,
+                "phone": phone,
+                "sex": encodeURI(sex),
+                "name": encodeURI(name),
+                "age": age,
+                "qq": qq,
+                "signtext": encodeURI(signtext),
+            };
+            $.ajax({
+                type: "GET",
+                url: "userinfo.do",
+                contentType: "application/json;charset=UTF-8",
+                data: userInfo,
+                dataType: "JSON",
+                success: function (data) {
+                    alert(data.name);
+                }, error: function () {
+                    alert("ajax error!");
+                }
+            });
+
+            alert(username+":"+name +":"+ sex+":" +age+":"+qq+":"+signtext+":"+phone);
         }
     </script>
 </head>
@@ -71,7 +128,7 @@
             </div><!--vipNav/-->
         </div><!--vip-left/-->
         <div class="vip-right">
-            <h3 class="vipright-title">修改头像</h3>
+            <%--<h3 class="vipright-title">修改头像</h3>
             <form action="#" method="get">
                 <dl class="vip-touxiang">
                     <dt><img src="images/tx.jpg" width="100" height="100"/></dt>
@@ -82,13 +139,13 @@
                     </dd>
                     <div class="clearfix"></div>
                 </dl><!--vip-touxiang/-->
-            </form>
+            </form>--%>
             <h3 class="vipright-title">修改资料</h3>
             <table class="grinfo">
                 <tbody>
                 <tr>
                     <th>手机号：</th>
-                    <td><strong>18521032517</strong>
+                    <td><strong id="phone">未登录</strong>
                         &nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:;"><span
                                 style="color:#888;cursor:pointer">(修改手机号)</span></a>
                     </td>
@@ -102,10 +159,12 @@
                 <tr>
                     <th><span class="red">*</span> 性 &nbsp; &nbsp;别：</th>
                     <td>
-                        <input type="radio" value="2" id="rbSex1" name="sex">
+                        <input type="radio" value="女" id="rbSex1" name="sex">
                         <label for="rbSex1">女</label>
-                        <input type="radio" value="1" id="rbSex2" name="sex">
+                        <input type="radio" value="男" id="rbSex2" name="sex">
                         <label for="rbSex2">男</label>
+                        <input type="radio" value="保密" id="rbSex3" name="sex">
+                        <label for="rbSex2">保密</label>
                         <span id="Sex_Tip"></span>
                     </td>
                 </tr>
@@ -122,7 +181,7 @@
                     <th>&nbsp;Q &nbsp; &nbsp;Q：</th>
                     <td>
                         <input class="inp inw" type="text" maxlength="15" value="" id="qq"
-                               onkeyup="return ValidateNumber(this,value)">
+                               onkeyup="this.value=this.value.replace(/[^\d]/g,'')">
                     </td>
                 </tr>
 

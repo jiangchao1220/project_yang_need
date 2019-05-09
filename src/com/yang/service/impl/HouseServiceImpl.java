@@ -66,12 +66,12 @@ public class HouseServiceImpl implements HouseService {
         String servenDaysAgo = DateUtil.getLastDate(nowDate, 7);
 
         List<House> houseList
-                = houseDao.getAllHouseByTypeAndTime(houseType.getValue(),servenDaysAgo,nowDate);
+                = houseDao.getAllHouseByTypeAndTime(houseType.getValue(), servenDaysAgo, nowDate);
         List<HouseVO> houseVOList = getHouseImages(houseList);
         return houseVOList;
     }
 
-    private List<HouseVO> getHouseImages(List<House> houseList){
+    private List<HouseVO> getHouseImages(List<House> houseList) {
         List<HouseVO> houseVOList = new ArrayList<>();
         for (House house : houseList) {
             List<String> images = houseDao.getHouseImges(house.getHouseNumber());
@@ -110,10 +110,14 @@ public class HouseServiceImpl implements HouseService {
     public List<HouseVO> findConcernHouses(String username) {
         //查询当前用户关注的所有房屋编号
         List<Integer> houseNumberList = houseDao.findAllConcernHouseNumber(username);
+        List<HouseVO> houseVOList = new ArrayList<>();
+        if (houseNumberList.size() == 0) {
+            return houseVOList;
+        }
         //批量查询house表
         List<House> houseList = houseDao.findAllConcernHouse(houseNumberList);
         //添加每所房屋图片列表
-        List<HouseVO> houseVOList = getHouseImages(houseList);
+        houseVOList = getHouseImages(houseList);
         return SortUtil.sortByTime(houseVOList);
     }
 
@@ -126,6 +130,16 @@ public class HouseServiceImpl implements HouseService {
         } else {
             //未关注
             return "notConcern";
+        }
+    }
+
+    @Override
+    public String cancelConcern(int houseNumber, String username) {
+        int num = houseDao.deleteConcern(username, houseNumber);
+        if (num == 1) {
+            return "deletesuccessed";
+        } else {
+            return "deletefailed";
         }
     }
 }

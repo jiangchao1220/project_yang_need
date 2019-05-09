@@ -63,6 +63,8 @@ public interface HouseDao {
      */
     List<Integer> findAllConcernHouseNumber(String username);
 
+
+
     /**
      * 通过编号批量查询房屋
      *
@@ -74,7 +76,13 @@ public interface HouseDao {
     //查询该房屋是否已经存在关注表中
     ConcernHouse findConcern(String username, int houseNumber);
 
-    //删除已关注的房屋
+    /**
+     * 删除关注房源
+     *
+     * @param houseNumber 房屋编号
+     * @param username    用户名
+     * @return 删除条数
+     */
     int deleteConcern(String username, int houseNumber);
 
     //添加关注房屋

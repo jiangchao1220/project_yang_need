@@ -25,12 +25,33 @@
         function loginout() {
             var msg = "退出登录!"
             var result = confirm(msg);
-
+            if (result) {
+                $.ajax({
+                    type: "GET",
+                    url: "..//loginOut/signOut.do",
+                    contentType: "application/json;charset=UTF-8",
+                    data: "",
+                    dataType: "JSON",
+                    success: function (data) {
+                        if (data == "signoutsuccess") {
+                            //退出成功
+                            alert("安全退出登录成功.");
+                            $("#alogin").empty();
+                            $("#alogin").append("<a href='login.jsp'>登录</a>");
+                            window.location = "user_guanzhu.jsp";
+                        } else {
+                            alert("您还未登录!");
+                        }
+                    }, error: function () {
+                        alert("ajax error!");
+                    }
+                });
+            }
         }
 
         function loadHouse(loginUser) {
             if (loginUser == null) {
-                alert("您还未登录!");
+                alert("您还未登录,无法查看已关注房屋信息!");
                 return;
             }
             var username = {
@@ -63,7 +84,31 @@
         }
 
         function deleteConcern(houseNumber) {
-            alert(houseNumber);
+            var loginUser = <%=session.getAttribute("loginUser") %>;
+            var concernInfo = {
+                "houseNumber": houseNumber,
+                "username": loginUser,
+            };
+            var msg = "取消关注?"
+            var result = confirm(msg);
+            if (result) {
+                $.ajax({
+                    type: "GET",
+                    url: "..//house/cancelConcern.do",
+                    contentType: "application/json;charset=UTF-8",
+                    data: concernInfo,
+                    dataType: "JSON",
+                    success: function (data) {
+                        if (data == "deletesuccessed") {
+                            window.location = "user_guanzhu.jsp";
+                        } else {
+                            alert(data);
+                        }
+                    }, error: function () {
+                        alert("ajax error!");
+                    }
+                });
+            }
         }
 
         function zufang(houseVO) {

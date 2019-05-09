@@ -108,12 +108,6 @@ public class HouseController {
             default:
                 houseList = new ArrayList<>();
         }
-//        Collections.sort(houseList, new Comparator<HouseVO>() {
-//            @Override
-//            public int compare(HouseVO o1, HouseVO o2) {
-//                return (java.text.Collator.getInstance(Locale.CHINA)).compare(o2.getHouse().getPublishDate(),o1.getHouse().getPublishDate());
-//            }
-//        });
         return JsonUtil.toJSon(SortUtil.sortByTime(houseList));
     }
 
@@ -206,5 +200,18 @@ public class HouseController {
     public String checkConcern(int houseNumber, String username) {
         String state = houseService.checkConcern(houseNumber, username);
         return JsonUtil.toJSon(state);
+    }
+
+    /**
+     * 个人中心取消关注房源
+     *
+     * @param houseNumber 房屋编号
+     * @param username    用户名
+     * @return 状态
+     */
+    @RequestMapping(value = "/cancelConcern", method = RequestMethod.GET)
+    @ResponseBody
+    public String cancelConcern(int houseNumber, String username) {
+        return JsonUtil.toJSon(houseService.cancelConcern(houseNumber, username));
     }
 }

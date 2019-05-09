@@ -1,6 +1,7 @@
 package com.yang.controller;
 
 import com.yang.entity.User;
+import com.yang.entity.UserInfo;
 import com.yang.service.UserService;
 import com.yang.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 /**
  * Created by jiang on 2019/4/14.
@@ -110,5 +113,26 @@ public class UserController {
             httpSession.removeAttribute("loginUser");
         }
         return JsonUtil.toJSon(isSuccess);
+    }
+
+    /**
+     * 修改用户资料信息
+     *
+     * @param userInfo userInfo
+     * @return isSuccess
+     */
+    @RequestMapping(value = "/**/userinfo", method = RequestMethod.GET, produces="text/html;charset=UTF-8;")
+    @ResponseBody
+    public String addUserInfo(UserInfo userInfo) throws UnsupportedEncodingException {
+        //中文解码
+        String sex = URLDecoder.decode(userInfo.getSex(),"UTF-8");
+        String name = URLDecoder.decode(userInfo.getName(),"UTF-8");
+        String signtext = URLDecoder.decode(userInfo.getSigntext(),"UTF-8");
+        userInfo.setSex(sex);
+        userInfo.setName(name);
+        userInfo.setSigntext(signtext);
+        System.out.println(JsonUtil.toJSon(userInfo));
+
+        return JsonUtil.toJSon(userInfo);
     }
 }
