@@ -188,8 +188,8 @@
                 <tr>
                     <th>手机号：</th>
                     <td><strong id="phone">未登录</strong>
-                        &nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:;"><span
-                                style="color:#888;cursor:pointer">(修改手机号)</span></a>
+                        <%--&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:;"><span
+                                style="color:#888;cursor:pointer">(修改手机号)</span></a>--%>
                     </td>
                 </tr>
                 <tr>
