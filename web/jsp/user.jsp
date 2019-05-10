@@ -18,10 +18,50 @@
                 $("#alogin").append("<a href='user.jsp'>" + loginUser + "</a>");
                 $("#phone").empty();
                 $("#phone").text(loginUser);
+                //加载个人信息
+                loadUserInfo(loginUser);
             } else {
                 $("#alogin").append("<a href='login.jsp'>登录</a>");
             }
         })
+
+        function loadUserInfo(username) {
+            var userInfo = {
+                "username": username,
+            };
+            $.ajax({
+                type: "GET",
+                url: "loadUserInfo.do",
+                contentType: "application/json;charset=UTF-8",
+                data: userInfo,
+                dataType: "JSON",
+                success: function (data) {
+                    if (data == null) {
+                        return;
+                    }
+                    switch (data.sex) {
+                        case "女":
+                            console.log("m")
+                            $("#rbSex1").prop("checked", true);
+                            break;
+                        case "男":
+                            console.log("f")
+                            $("#rbSex2").prop("checked", true);
+                            break;
+                        case "保密":
+                            console.log("s")
+                            $("#rbSex3").prop("checked", true);
+                            break;
+                    }
+                    $("#title").val(data.name);
+                    $("#age").val(data.age);
+                    $("#qq").val(data.qq);
+                    $("#sign").val(data.signtext);
+                }, error: function () {
+                    alert("ajax error!");
+                }
+            });
+        }
 
         function loginout() {
             var msg = "退出登录!"
@@ -52,6 +92,10 @@
 
         function mod_member() {
             var username = <%=session.getAttribute("loginUser") %>;
+            if (username == null) {
+                alert("请登陆后操作!");
+                return;
+            }
             var phone = username;
             var sex = $('input[name="sex"]:checked').val();
             var name = $("#title").val();
@@ -75,13 +119,11 @@
                 data: userInfo,
                 dataType: "JSON",
                 success: function (data) {
-                    alert(data.name);
+                    alert(data);
                 }, error: function () {
                     alert("ajax error!");
                 }
             });
-
-            alert(username+":"+name +":"+ sex+":" +age+":"+qq+":"+signtext+":"+phone);
         }
     </script>
 </head>
@@ -153,7 +195,7 @@
                 <tr>
                     <th><span class="red">*</span> 昵称：</th>
                     <td>
-                        <input class="inp inw" type="text" id="title" value="185****2517" maxlength="14">
+                        <input class="inp inw" type="text" id="title" value="" maxlength="14">
                     </td>
                 </tr>
                 <tr>

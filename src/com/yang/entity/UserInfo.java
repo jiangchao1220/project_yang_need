@@ -4,6 +4,7 @@ package com.yang.entity;
  * Created by jiang on 2019/5/9.
  */
 public class UserInfo {
+    private int id;
     private String username;
     private String phone;
     private String name;
@@ -13,6 +14,14 @@ public class UserInfo {
     private String signtext;
 
     public UserInfo() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getSex() {

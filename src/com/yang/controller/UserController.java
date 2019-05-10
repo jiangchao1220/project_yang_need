@@ -123,16 +123,26 @@ public class UserController {
      */
     @RequestMapping(value = "/**/userinfo", method = RequestMethod.GET, produces="text/html;charset=UTF-8;")
     @ResponseBody
-    public String addUserInfo(UserInfo userInfo) throws UnsupportedEncodingException {
-        //中文解码
-        String sex = URLDecoder.decode(userInfo.getSex(),"UTF-8");
-        String name = URLDecoder.decode(userInfo.getName(),"UTF-8");
-        String signtext = URLDecoder.decode(userInfo.getSigntext(),"UTF-8");
-        userInfo.setSex(sex);
-        userInfo.setName(name);
-        userInfo.setSigntext(signtext);
-        System.out.println(JsonUtil.toJSon(userInfo));
+    public String addUserInfo(UserInfo userInfo) {
+        String msg;
+        try {
+            msg = userService.insertUserInfo(userInfo);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            msg = "decode error";
+        }
+        return JsonUtil.toJSon(msg);
+    }
 
-        return JsonUtil.toJSon(userInfo);
+    /**
+     * 修改用户资料信息
+     *
+     * @param username username
+     * @return userinfo
+     */
+    @RequestMapping(value = "/**/loadUserInfo", method = RequestMethod.GET, produces="text/html;charset=UTF-8;")
+    @ResponseBody
+    public String findUserInfo(String username) {
+        return JsonUtil.toJSon(userService.findUserInfo(username));
     }
 }

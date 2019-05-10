@@ -2,6 +2,9 @@ package com.yang.service;
 
 import com.yang.entity.HouseVO;
 import com.yang.entity.User;
+import com.yang.entity.UserInfo;
+
+import java.io.UnsupportedEncodingException;
 
 /**
  * Created by jiang on 2019/4/14.
@@ -39,4 +42,20 @@ public interface UserService {
      * @return 修改的数据条数, 0:刷新用户表数据失败, 1:刷新用户表数据成功
      */
     int updatePassword(String userName, String password);
+
+    /**
+     * 处理用户信息,插入信息表
+     *
+     * @param userInfo 用户信息
+     * @return 提示信息
+     */
+    String insertUserInfo(UserInfo userInfo) throws UnsupportedEncodingException;
+
+    /**
+     * 处理用户信息,插入信息表
+     *
+     * @param username 用户名
+     * @return 信息
+     */
+    UserInfo findUserInfo(String username);
 }
