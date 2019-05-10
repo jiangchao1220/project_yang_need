@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -28,28 +28,31 @@ public class UserController {
      * 登录Controller
      *
      * @param httpSession session
-     * @param response    response
+     * @param request     request
      * @param username    用户名
      * @param password    密码
      * @return 跳转页面
      * @throws IOException IO异常
      */
     @RequestMapping(value = "/**/login", method = RequestMethod.POST)
+    @ResponseBody
     public String login(
             HttpSession httpSession,
-            HttpServletResponse response,
+            HttpServletRequest request,
             String username,
             String password) throws IOException {
         User user = new User();
+        String username2 = request.getParameter("username");
+        String password2 = request.getParameter("password");
         user.setName(username);
         user.setPassword(password);
         User u = userService.loginUser(user);
         System.out.println("jinlai la");
         if (null == u) {
-            response.sendRedirect("login.jsp");
+            return JsonUtil.toJSon("failed");
         }
         httpSession.setAttribute("loginUser", u.getName());
-        return "index";
+        return JsonUtil.toJSon("successed");
     }
 
     /**
@@ -120,7 +123,7 @@ public class UserController {
      * @param userInfo userInfo
      * @return isSuccess
      */
-    @RequestMapping(value = "/**/userinfo", method = RequestMethod.GET, produces="text/html;charset=UTF-8;")
+    @RequestMapping(value = "/**/userinfo", method = RequestMethod.GET, produces = "text/html;charset=UTF-8;")
     @ResponseBody
     public String addUserInfo(UserInfo userInfo) {
         String msg;
@@ -139,7 +142,7 @@ public class UserController {
      * @param username username
      * @return userinfo
      */
-    @RequestMapping(value = "/**/loadUserInfo", method = RequestMethod.GET, produces="text/html;charset=UTF-8;")
+    @RequestMapping(value = "/**/loadUserInfo", method = RequestMethod.GET, produces = "text/html;charset=UTF-8;")
     @ResponseBody
     public String findUserInfo(String username) {
         return JsonUtil.toJSon(userService.findUserInfo(username));
