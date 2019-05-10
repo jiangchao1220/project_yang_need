@@ -19,13 +19,6 @@
             } else{
                 $("#alogin").append("<a href='login.jsp'>登录</a>");
             }
-//            //测试json数据
-//            var adata = {
-//                "id": "1",
-//                "name": "jiangchao",
-//                "password": "1234"
-//            }
-//            var data = JSON.stringify(adata);
 
             //加载租房房源信息
             $.ajax({
@@ -106,13 +99,11 @@
                     for (var i = 0; maxLength > i; i++) {
                         if (i == 0) {
                             $("#secondhand_house_list1").append(
-//                                "<div class='in-er-left'>"
                                 "<a href='../house/proinfo.do?houseNumber="+ data[i].houseNumber +"'>"
                                 + "<img src='" + data[i].images[0] + "' width='380' height='285'/>"
                                 + "</a>"
                                 + "<div class='in-er-left-text'><strong class='fl'>" + data[i].houseInfo
                                 + "</strong><strong class='fr alignRight'>¥" + data[i].housePrice + "万元</strong></div>"
-//                                + "</div>"
                             );
                         }
                         else {
@@ -130,7 +121,6 @@
                         }
                     }
                     $("#secondhand_house_list2").append("<div class='clears'></div>");
-//                    $("#secondhand_house").append("<div class='clears'></div>");
                 }, error: function () {
                     alert("ajax error!");
                 }
@@ -210,9 +200,9 @@
             <li><a href="pro_zu.jsp">租房</a></li>
             <li><a href="pro_xin.jsp">新房</a></li>
             <li><a href="pro_er.jsp">二手房</a></li>
-            <li class="zhiding"><a href="javascript:;">指定购房</a></li>
-            <li><a href="user_jingji.jsp">申请自由经纪人</a></li>
-            <li><a href="about.html">关于我们</a></li>
+            <%--<li class="zhiding"><a href="javascript:;">指定购房</a></li>--%>
+            <%--<li><a href="user_jingji.jsp">申请自由经纪人</a></li>--%>
+            <%--<li><a href="about.html">关于我们</a></li>--%>
             <div class="clears"></div>
         </ul><!--nav/-->
         <div class="clears"></div>
