@@ -13,8 +13,13 @@
         $(function () {
             //导航定位
             $(".nav li:eq(6)").addClass("navCur");
-            var loginUser = <%=session.getAttribute("loginUser") %>;
-            if (loginUser != null) {
+            var loginUser = "${loginUser}";
+            if (loginUser != "") {
+                var isBorker = "${isBorker}";
+                if (isBorker == "borker") {
+                    window.location = "broker_user.jsp";
+                }
+
                 $("#alogin").append("<a href='user.jsp'>" + loginUser + "</a>");
                 $("#phone").empty();
                 $("#phone").text(loginUser);
@@ -91,7 +96,7 @@
         }
 
         function mod_member() {
-            var username = <%=session.getAttribute("loginUser") %>;
+            var username = "${loginUser}";
             if (username == null) {
                 alert("请登陆后操作!");
                 return;

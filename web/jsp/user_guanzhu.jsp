@@ -13,8 +13,12 @@
         $(function () {
             //导航定位
             $(".nav li:eq(6)").addClass("navCur");
-            var loginUser = <%=session.getAttribute("loginUser") %>;
-            if (loginUser != null) {
+            var loginUser = "${loginUser}";
+            if (loginUser != "") {
+                var isBorker = "${isBorker}";
+                if (isBorker == "borker") {
+                    window.location = "broker_user_guanzhu.jsp";
+                }
                 $("#alogin").append("<a href='user.jsp'>" + loginUser + "</a>");
             } else {
                 $("#alogin").append("<a href='login.jsp'>登录</a>");
@@ -84,7 +88,7 @@
         }
 
         function deleteConcern(houseNumber) {
-            var loginUser = <%=session.getAttribute("loginUser") %>;
+            var loginUser = "${loginUser}";
             var concernInfo = {
                 "houseNumber": houseNumber,
                 "username": loginUser,
@@ -191,8 +195,6 @@
                     <dd>
                         <a href="user_guanzhu.jsp" class="vipNavCur">关注房源</a>
                         <a href="javascript:;" onclick="loginout()">退出登录</a>
-                        <%--<a href="user_shenqing.jsp">申请社区自由经纪人</a>
-                        <a href="user_jingji.jsp">社区自由经纪人</a>--%>
                     </dd>
                 </dl>
             </div><!--vipNav/-->

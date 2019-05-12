@@ -13,8 +13,13 @@
         $(function () {
             //导航定位
             $(".nav li:eq(6)").addClass("navCur");
-            var loginUser = <%=session.getAttribute("loginUser") %>;
-            if (loginUser != null) {
+            var loginUser = "${loginUser}";
+            if (loginUser != "") {
+                var isBorker = "${isBorker}";
+                if (isBorker == "borker") {
+                    window.location = "broker_user_pwd.jsp";
+                }
+
                 $("#alogin").append("<a href='user.jsp'>" + loginUser + "</a>");
                 $("#user_phone").append(loginUser);
             } else {
@@ -26,7 +31,7 @@
         var pwdverify = /^[a-zA-Z]{1}([a-zA-Z0-9]|[._]){5,17}$/;
 
         function sub_username() {
-            var loginCheck = <%=session.getAttribute("loginUser") %>;
+            var loginCheck = "${loginUser}";
             if (loginCheck == null) {
                 alert("请先登录!");
                 return;

@@ -13,8 +13,8 @@
         $(function () {
             //导航定位
             $(".nav li:eq(5)").addClass("navCur");
-            var loginUser = <%=session.getAttribute("loginUser") %>;
-            if (loginUser != null) {
+            var loginUser = "${loginUser}";
+            if (loginUser != "") {
                 $("#alogin").append("<a href='user.jsp'>" + loginUser +"</a>");
             } else{
                 $("#alogin").append("<a href='login.jsp'>登录</a>");
