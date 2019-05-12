@@ -2,6 +2,7 @@ package com.yang.controller;
 
 import com.yang.entity.User;
 import com.yang.entity.UserInfo;
+import com.yang.service.BrokerService;
 import com.yang.service.UserService;
 import com.yang.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private BrokerService brokerService;
 
     /**
      * 登录Controller
@@ -49,9 +53,13 @@ public class UserController {
         User u = userService.loginUser(user);
         System.out.println("jinlai la");
         if (null == u) {
-            return JsonUtil.toJSon("failed");
+            //登陆页面兼容经纪人登陆
+            String brokerLoginMsg = brokerService.borkerLogin(httpSession, username, password);
+            if ("failed".equals(brokerLoginMsg)) {
+                return JsonUtil.toJSon("failed");
+            }
         }
-        httpSession.setAttribute("loginUser", u.getName());
+        httpSession.setAttribute("loginUser", username);
         return JsonUtil.toJSon("successed");
     }
 

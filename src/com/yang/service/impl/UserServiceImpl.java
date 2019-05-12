@@ -1,5 +1,6 @@
 package com.yang.service.impl;
 
+import com.yang.dao.BrokerDao;
 import com.yang.dao.UserDao;
 import com.yang.entity.ConcernHouse;
 import com.yang.entity.User;
@@ -19,6 +20,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     UserDao userDao;
+    @Autowired
+    BrokerDao brokerDao;
 
     @Override
     public User loginUser(User user) {
@@ -54,6 +57,10 @@ public class UserServiceImpl implements UserService {
         user.setName(userName);
         user.setPassword(password);
         int isSuccess = userDao.updatePwd(user);
+        //兼容经纪人账号
+        if (isSuccess == 0) {
+            isSuccess = brokerDao.updatePassword(userName,password);
+        }
         return isSuccess;
     }
 

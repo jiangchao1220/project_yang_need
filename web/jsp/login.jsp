@@ -86,8 +86,13 @@
                 <p class="clearfix"><input class="submit" type="button" onclick="fromClick()" value="立即登录"/></p>
             </form>
             <div class="reg-logo-right">
-                <h3>如果您没有账号，请</h3>
+                <h3>普通用户注册通道:</h3>
                 <a href="reg.jsp" class="logo-a">立即注册</a>
+            </div><!--reg-logo-right/-->
+            <p>&nbsp;</p>
+            <div class="reg-logo-right">
+                <h3>经纪人注册通道:</h3>
+                <a href="broker_reg.jsp" class="logo-a">立即注册</a>
             </div><!--reg-logo-right/-->
             <div class="clears"></div>
         </div><!--reg-logo/-->

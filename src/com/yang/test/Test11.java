@@ -1,10 +1,8 @@
 package com.yang.test;
 
-import com.yang.entity.House;
-import com.yang.entity.HouseVO;
-import com.yang.entity.IndexHouse;
-import com.yang.entity.User;
+import com.yang.entity.*;
 import com.yang.model.HouseType;
+import com.yang.service.BrokerService;
 import com.yang.service.HouseService;
 import com.yang.service.UserService;
 import com.yang.util.DateUtil;
@@ -14,6 +12,7 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import javax.servlet.http.HttpSession;
 import javax.xml.bind.util.JAXBSource;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -22,6 +21,31 @@ import java.util.*;
  * Created by jiang on 2019/3/31.
  */
 public class Test11 {
+    @Test
+    public void brokerServiceTest() {
+        ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");
+        BrokerService bs = (BrokerService) ac.getBean("brokerServiceImpl");
+//        String broker = bs.borkerLogin("18428327241", "yc12345");
+//        System.out.println(broker);
+//
+//        String broker2 = bs.borkerLogin("18428327111", "yc12345");
+//        System.out.println(broker2);
+//
+//        String broker3 = bs.borkerLogin(null, null);
+//        System.out.println(broker3);
+//
+//        String broker4 = bs.borkerLogin("", "");
+//        System.out.println(broker4);
+    }
+
+    @Test
+    public void brokerUpPwdTest() {
+        ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");
+        BrokerService bs = (BrokerService) ac.getBean("brokerServiceImpl");
+        UserService us = (UserService) ac.getBean("userServiceImpl");
+        us.updatePassword("18428327241", "yc123456");
+    }
+
     //test
     @Test
     public void testr1(){

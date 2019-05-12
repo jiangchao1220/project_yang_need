@@ -14,9 +14,10 @@
     <script type="text/javascript" src="<%=basePath%>/js/jquery.js"></script>
     <script type="text/javascript" src="<%=basePath%>/js/js.js"></script>
     <script type="text/javascript">
-        var loginUser = <%=session.getAttribute("loginUser") %>;
+        <%--var loginUser = "${loginUser}";--%>
+        var loginUser = "${loginUser}";
         $(function () {
-            if (loginUser != null) {
+            if (loginUser != "") {
                 $("#alogin").append("<a href='<%=basePath%>/user.jsp'>" + loginUser + "</a>");
             } else {
                 $("#alogin").append("<a href='<%=basePath%>/login.jsp'>登录</a>");
@@ -143,7 +144,7 @@
         })
 
         function checkConcern(houseNum) {
-            if (loginUser == null) {
+            if (loginUser == "") {
                 return;
             }
             var houseData = {
@@ -168,7 +169,7 @@
         }
 
         function collection() {
-            if (loginUser == null) {
+            if (loginUser == "") {
                 alert("您还未登录!")
                 return;
             }
