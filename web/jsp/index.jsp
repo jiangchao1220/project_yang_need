@@ -16,6 +16,11 @@
             <%--var loginUser = <%=session.getAttribute("loginUser") %>;--%>
             var loginUser = "${loginUser}";
             if (loginUser != "") {
+                $("#from1").empty();
+                $("#from1").append("<h1 align='cnter'>您已经登陆</h1>" +
+                    "<div class='zhidingsub'> " +
+                    "<input type='button' onclick='loginout()' value='退出登录'/> " +
+                    "</div>");
                 $("#alogin").append("<a href='user.jsp'>" + loginUser + "</a>");
             } else {
                 $("#alogin").append("<a href='login.jsp'>登录</a>");
@@ -159,6 +164,33 @@
 
         function borker_reg() {
             window.location = "broker_reg.jsp";
+        }
+
+        function loginout() {
+            var msg = "退出登录!"
+            var result = confirm(msg);
+            if (result) {
+                $.ajax({
+                    type: "GET",
+                    url: "..//loginOut/signOut.do",
+                    contentType: "application/json;charset=UTF-8",
+                    data: "",
+                    dataType: "JSON",
+                    success: function (data) {
+                        if (data == "signoutsuccess") {
+                            //退出成功
+                            alert("安全退出登录成功.");
+                            $("#alogin").empty();
+                            $("#alogin").append("<a href='login.jsp'>登录</a>");
+                            window.location = "index.jsp";
+                        } else {
+                            alert("您还未登录!");
+                        }
+                    }, error: function () {
+                        alert("ajax error!");
+                    }
+                });
+            }
         }
     </script>
 </head>
@@ -308,7 +340,7 @@
 <div class="bg100"></div>
 <div class="zhidinggoufang">
     <h2>经纪人登录 <span class="close">X</span></h2>
-    <form action="#" method="get">
+    <form action="#" method="get" id="from1">
         <%--<div class="zhiding-list">
             <label>选择区域：</label>
             <select>
