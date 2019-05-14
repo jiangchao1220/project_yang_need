@@ -11,6 +11,10 @@
 		SELECT * FROM `broker` WHERE accout=#{arg0}
 	</select>
 
+	<select id="getBrokerInfo" resultType="broker">
+		SELECT * FROM `broker` WHERE accout=#{arg0}
+	</select>
+
 	<insert id="insertBroker" parameterType="com.yang.entity.Broker">
 		INSERT INTO `broker`(accout,password,phone,name,sex)
 		VALUES (#{accout},#{password},#{phone},#{name},#{sex})
@@ -18,6 +22,10 @@
 
 	<update id="updatePassword">
 		UPDATE broker SET password=#{arg1} WHERE accout=#{arg0}
+	</update>
+
+	<update id="updateBrokerInfo" parameterType="broker">
+		UPDATE broker SET phone=#{phone},name=#{name},sex=#{sex},info=#{info},age=#{age} WHERE accout=#{accout}
 	</update>
 
 

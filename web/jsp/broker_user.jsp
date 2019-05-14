@@ -31,7 +31,7 @@
             };
             $.ajax({
                 type: "GET",
-                url: "loadUserInfo.do",
+                url: "loadBrokerUserInfo.do",
                 contentType: "application/json;charset=UTF-8",
                 data: userInfo,
                 dataType: "JSON",
@@ -48,15 +48,11 @@
                             console.log("f")
                             $("#rbSex2").prop("checked", true);
                             break;
-                        case "保密":
-                            console.log("s")
-                            $("#rbSex3").prop("checked", true);
-                            break;
                     }
                     $("#title").val(data.name);
                     $("#age").val(data.age);
-                    $("#qq").val(data.qq);
-                    $("#sign").val(data.signtext);
+                    $("#qq").val(data.phone);
+                    $("#sign").val(data.info);
                 }, error: function () {
                     alert("ajax error!");
                 }
@@ -92,30 +88,28 @@
 
         function mod_member() {
             var username = "${loginUser}";
-            if (username == null) {
+            if (username == "") {
                 alert("请登陆后操作!");
                 return;
             }
-            var phone = username;
             var sex = $('input[name="sex"]:checked').val();
             var name = $("#title").val();
             var age = $("#age").val();
-            var qq = $("#qq").val();
+            var phone = $("#qq").val();
             var signtext = $("#sign").val();
 
             var userInfo = {
-                "username": username,
+                "accout": username,
                 "phone": phone,
                 "sex": encodeURI(sex),
                 "name": encodeURI(name),
                 "age": age,
-                "qq": qq,
-                "signtext": encodeURI(signtext),
+                "info": encodeURI(signtext),
             };
             $.ajax({
-                type: "GET",
-                url: "userinfo.do",
-                contentType: "application/json;charset=UTF-8",
+                type: "POST",
+                url: "brokeruserinfo.do",
+                contentType: "application/x-www-form-urlencoded;charset=UTF-8",
                 data: userInfo,
                 dataType: "JSON",
                 success: function (data) {
@@ -176,14 +170,11 @@
             <table class="grinfo">
                 <tbody>
                 <tr>
-                    <th>手机号：</th>
-                    <td><strong id="phone">未登录</strong>
-                        <%--&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:;"><span
-                                style="color:#888;cursor:pointer">(修改手机号)</span></a>--%>
-                    </td>
+                    <th>账号：</th>
+                    <td><strong id="phone">未登录</strong></td>
                 </tr>
                 <tr>
-                    <th><span class="red">*</span> 昵称：</th>
+                    <th><span class="red">*</span> 姓名：</th>
                     <td>
                         <input class="inp inw" type="text" id="title" value="" maxlength="14">
                     </td>
@@ -195,8 +186,6 @@
                         <label for="rbSex1">女</label>
                         <input type="radio" value="男" id="rbSex2" name="sex">
                         <label for="rbSex2">男</label>
-                        <input type="radio" value="保密" id="rbSex3" name="sex">
-                        <label for="rbSex2">保密</label>
                         <span id="Sex_Tip"></span>
                     </td>
                 </tr>
@@ -210,7 +199,7 @@
 
 
                 <tr>
-                    <th>&nbsp;Q &nbsp; &nbsp;Q：</th>
+                    <th>电话：</th>
                     <td>
                         <input class="inp inw" type="text" maxlength="15" value="" id="qq"
                                onkeyup="this.value=this.value.replace(/[^\d]/g,'')">
@@ -218,7 +207,7 @@
                 </tr>
 
                 <tr>
-                    <th valign="top">个性签名：</th>
+                    <th valign="top">个人简介：</th>
                     <td>
                         <textarea id="sign" class="grtextarea"></textarea>
                         <br>

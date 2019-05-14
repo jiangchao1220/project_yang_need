@@ -41,4 +41,20 @@ public interface BrokerDao {
      * @return int
      */
     int insertBroker(Broker broker);
+
+    /**
+     * 查询经纪人信息
+     *
+     * @param accout accout
+     * @return Broker
+     */
+    Broker getBrokerInfo(String accout);
+
+    /**
+     * 修改经纪人信息
+     *
+     * @param broker broker
+     * @return int
+     */
+    int updateBrokerInfo(Broker broker);
 }

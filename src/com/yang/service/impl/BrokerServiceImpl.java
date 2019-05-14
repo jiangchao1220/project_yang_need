@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpSession;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 /**
  * Created by jiang on 2019/5/12.
@@ -35,7 +37,7 @@ public class BrokerServiceImpl implements BrokerService {
         } else {
             msg = "successed";
             String accout = broker.getAccout();
-            httpSession.setAttribute("loginUser", JsonUtil.toJSon(accout));
+            httpSession.setAttribute("loginUser", accout);
             httpSession.setAttribute("isBorker", "borker");
         }
         return msg;
@@ -58,13 +60,37 @@ public class BrokerServiceImpl implements BrokerService {
 
     @Override
     public String insertBrokerAccout(String accout, String password, String sex, String realName, String contextPhone) {
-        Broker broker = new Broker(accout,password,sex,realName,contextPhone);
+        Broker broker = new Broker(accout,password,contextPhone,realName,sex);
         int insertNum = brokerDao.insertBroker(broker);
         if (insertNum == 1) {
             return "success";
         } else {
             return "fail";
         }
+    }
+
+    @Override
+    public Broker getBrokerInfo(String accout) {
+        Broker broker = brokerDao.getBrokerInfo(accout);
+        //过滤密码信息
+        broker.setPassword("");
+        return broker;
+    }
+
+    @Override
+    public String updateBrokerInfo(Broker broker) throws UnsupportedEncodingException {
+        //解码
+        broker.setSex(URLDecoder.decode(broker.getSex(), "UTF-8"));
+        broker.setName(URLDecoder.decode(broker.getName(), "UTF-8"));
+        broker.setInfo(URLDecoder.decode(broker.getInfo(), "UTF-8"));
+        int num = brokerDao.updateBrokerInfo(broker);
+        String msg;
+        if (num == 1) {
+            msg = "修改成功";
+        } else {
+            msg = "修改失败";
+        }
+        return msg;
     }
 
     private boolean check(String username, String password) {

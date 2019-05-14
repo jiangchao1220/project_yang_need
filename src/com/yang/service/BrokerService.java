@@ -1,6 +1,9 @@
 package com.yang.service;
 
+import com.yang.entity.Broker;
+
 import javax.servlet.http.HttpSession;
+import java.io.UnsupportedEncodingException;
 
 /**
  * Created by jiang on 2019/5/12.
@@ -29,9 +32,26 @@ public interface BrokerService {
      * @param accout    账户
      * @return msg
      */
-    String insertBrokerAccout(String accout,
-                              String password,
-                              String sex,
-                              String realName,
-                              String contextPhone);
+    String insertBrokerAccout(
+            String accout,
+            String password,
+            String sex,
+            String realName,
+            String contextPhone);
+
+    /**
+     * 获取经纪人信息
+     *
+     * @param accout    账户
+     * @return Broker
+     */
+    Broker getBrokerInfo(String accout);
+
+    /**
+     * 修改经纪人信息
+     *
+     * @param broker    broker
+     * @return msg
+     */
+    String updateBrokerInfo(Broker broker) throws UnsupportedEncodingException;
 }

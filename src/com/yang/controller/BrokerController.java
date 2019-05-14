@@ -1,5 +1,6 @@
 package com.yang.controller;
 
+import com.yang.entity.Broker;
 import com.yang.service.BrokerService;
 import com.yang.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,5 +80,36 @@ public class BrokerController {
             e.printStackTrace();
         }
         return msg;
+    }
+
+    /**
+     * 加载经纪人资料信息
+     *
+     * @param username username
+     * @return userinfo
+     */
+    @RequestMapping(value = "/**/loadBrokerUserInfo", method = RequestMethod.GET, produces = "text/html;charset=UTF-8;")
+    @ResponseBody
+    public String findUserInfo(String username) {
+        return JsonUtil.toJSon(brokerService.getBrokerInfo(username));
+    }
+
+    /**
+     * 修改用户资料信息
+     *
+     * @param broker broker
+     * @return isSuccess
+     */
+    @RequestMapping(value = "/**/brokeruserinfo", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
+    @ResponseBody
+    public String addUserInfo(Broker broker) {
+        String msg;
+        try {
+            msg = brokerService.updateBrokerInfo(broker);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            msg = "decode error";
+        }
+        return JsonUtil.toJSon(msg);
     }
 }

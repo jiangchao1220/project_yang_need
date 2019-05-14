@@ -10,6 +10,8 @@ public class Broker {
     private String phone;
     private String name;
     private String sex;
+    private String info;
+    private int age;
 
     public Broker() {
     }
@@ -20,6 +22,22 @@ public class Broker {
         this.phone = phone;
         this.name = name;
         this.sex = sex;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
     }
 
     public int getId() {
