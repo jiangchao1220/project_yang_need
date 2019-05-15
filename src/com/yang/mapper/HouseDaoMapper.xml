@@ -69,6 +69,14 @@
 		SELECT house_number FROM `user_concern` WHERE username=#{arg0}
 	</select>
 
+	<select id="findAllPublishHouseNumber" resultType="int">
+		SELECT house_number FROM `broker_house` WHERE broker_accout=#{arg0}
+	</select>
+
+	<select id="findAllConcernNum" resultType="int">
+		SELECT COUNT(id) FROM user_concern WHERE house_number=#{arg0}
+	</select>
+
 	<select id="findAllConcernHouse" parameterType="java.util.List" resultMap="HouseMap">
 		SELECT * FROM `house` WHERE house_number IN
 		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">

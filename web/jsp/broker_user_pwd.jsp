@@ -152,8 +152,8 @@
                     <dt class="vipIcon1">我的邻居大妈</dt>
                     <dd>
                         <a href="broker_user_guanzhu.jsp">关注房源</a>
-                        <a href="#">我的发布</a>
-                        <a href="#">添加房源</a>
+                        <a href="broker_fabu.jsp">我的发布</a>
+                        <a href="broker_add_house.jsp">添加房源</a>
                         <a href="javascript:;" onclick="loginout()">退出登录</a>
                     </dd>
                 </dl>

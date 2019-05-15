@@ -61,6 +61,14 @@ public interface HouseService {
     List<HouseVO> findConcernHouses(String username);
 
     /**
+     * 查询用户发布的房源
+     *
+     * @param account    用户名
+     * @return 房屋信息列表
+     */
+    List<HouseVO> findPublishHouse(String account);
+
+    /**
      * 查询是否已关注房源
      *
      * @param houseNumber 房屋编号

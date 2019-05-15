@@ -63,7 +63,21 @@ public interface HouseDao {
      */
     List<Integer> findAllConcernHouseNumber(String username);
 
+    /**
+     * 查询发布房屋编号列表
+     *
+     * @param account 用户名
+     * @return 房屋编号列表
+     */
+    List<Integer> findAllPublishHouseNumber(String account);
 
+    /**
+     * 查询房屋关注的用户人数
+     *
+     * @param houseNumber 房屋编号
+     * @return 关注人数
+     */
+    int findAllConcernNum(int houseNumber);
 
     /**
      * 通过编号批量查询房屋

@@ -122,6 +122,29 @@ public class HouseServiceImpl implements HouseService {
     }
 
     @Override
+    public List<HouseVO> findPublishHouse(String account) {
+        //查询当前用户发布的所有房屋编号
+        List<Integer> houseNumberList = houseDao.findAllPublishHouseNumber(account);
+        List<HouseVO> houseVOList = new ArrayList<>();
+        if (houseNumberList.size() == 0) {
+            return houseVOList;
+        }
+        //批量查询house表
+        List<House> houseList = houseDao.findAllConcernHouse(houseNumberList);
+        //添加每所房屋图片列表
+        houseVOList = getHouseImages(houseList);
+        //添加关注人数
+        addConcernNum(houseVOList);
+        return SortUtil.sortByTime(houseVOList);
+    }
+
+    private void addConcernNum(List<HouseVO> houseVOList) {
+        for (HouseVO houseVO : houseVOList) {
+            houseVO.setConcernNum(houseDao.findAllConcernNum(houseVO.getHouse().getHouseNumber()));
+        }
+    }
+
+    @Override
     public String checkConcern(int houseNumber, String username) {
         ConcernHouse concernHouse = houseDao.findConcern(username, houseNumber);
         if (concernHouse != null) {

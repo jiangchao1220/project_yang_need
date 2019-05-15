@@ -16,6 +16,8 @@
     <script type="text/javascript">
         <%--var loginUser = "${loginUser}";--%>
         var loginUser = "${loginUser}";
+        // 从session中获取房屋编号houseNumber
+        var houseNum = <%=session.getAttribute("brokerDetailHouseNumber") %>;
         $(function () {
             if (loginUser != "") {
                 $("#alogin").append("<a href='<%=basePath%>/user.jsp'>" + loginUser + "</a>");
@@ -23,8 +25,6 @@
                 $("#alogin").append("<a href='<%=basePath%>/login.jsp'>登录</a>");
             }
 
-            // 从session中获取房屋编号houseNumber
-            var houseNum = <%=session.getAttribute("houseNumber") %>;
             if (houseNum == "") {
                 alert("未获取到房屋信息!")
                 window.location = "<%=basePath%>/index.jsp";
@@ -138,68 +138,14 @@
                     alert("ajax error!");
                 }
             });
-
-            //查询是否关注该房源
-            checkConcern(houseNum);
         })
 
-        function checkConcern(houseNum) {
-            if (loginUser == "") {
-                return;
-            }
-            var houseData = {
-                "houseNumber": houseNum,
-                "username": loginUser
-            };
-            $.ajax({
-                type: "GET",
-                url: "..//house/checkConcern.do",
-                contentType: "application/json;charset=UTF-8",
-                data: houseData,
-                dataType: "JSON",
-                success: function (data) {
-                    if (data == "concern") {
-                        //已关注该房源
-                        $("#collection").text("取消关注");
-                    }
-                }, error: function () {
-                    alert("ajax error!");
-                }
-            });
+        function edit() {
+            alert("TODO修改房屋:" + houseNum);
         }
 
-        function collection() {
-            if (loginUser == "") {
-                alert("您还未登录!")
-                return;
-            }
-            var houseNum = <%=session.getAttribute("houseNumber") %>;
-            var houseData = {
-                "houseNumber": houseNum,
-                "username": loginUser
-            };
-            $.ajax({
-                type: "GET",
-                url: "..//house/concernHouse.do",
-                contentType: "application/json;charset=UTF-8",
-                data: houseData,
-                dataType: "JSON",
-                success: function (data) {
-                    if (data == "cancelConcern") {
-                        //已取消关注
-                        alert("您已取消关注该房源!");
-                        $("#collection").text("关注房源");
-                    } else if (data == "concern") {
-                        //已关注房源
-                        alert("关注成功!");
-                        $("#collection").text("取消关注");
-                    } else {
-                        alert("请求失败,请稍后再试!");
-                    }
-                }, error: function () {
-                    alert("ajax error!");
-                }
-            });
+        function deleteHouse() {
+            alert("TODO删除房屋:" + houseNum);
         }
     </script>
 </head>
@@ -235,18 +181,10 @@
         <div class="proText fr">
             <h3 id="proTitle" class="proTitle"></h3>
             <div id="proText1" class="proText1">
-                <%--编号：312737<br/>
-                售价：225万<br/>
-                户型：2室 1厅 1卫<br/>
-                面积：70.0㎡<br/>
-                朝向：南<br/>
-                楼层：2层/18层<br/>
-                装修：简单装修<br/>
-                小区：甘露园南里一区（朝阳 甘露园）1995年--%>
             </div>
             <div class="xun-car">
-                <%--<a href="javascript:;" class="xwjg">¥<strong>3600</strong>元</a>--%>
-                <a href="javascript:;" class="projrgwc" id="collection" onclick="collection()">关注房源</a>
+                <a href="javascript:;" class="projrgwc" id="edit" onclick="edit()">修改房源</a>
+                <a href="javascript:;" class="projrgwc" id="delete" onclick="deleteHouse()">删除房源</a>
             </div><!--xun-car/-->
         </div><!--proText/-->
         <div class="clears"></div>

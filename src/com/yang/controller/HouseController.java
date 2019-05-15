@@ -59,6 +59,8 @@ public class HouseController {
     }
 
     /**
+     * 跳转房屋详情页
+     *
      * @param houseNumber 房屋编号
      * @return 房屋详情页
      * @throws IOException
@@ -66,9 +68,22 @@ public class HouseController {
     @RequestMapping(value = "/proinfo", method = RequestMethod.GET)
     public String turnHouseDetailsPage(int houseNumber, HttpSession httpSession) throws IOException {
         System.out.println(houseNumber);
-        //TODO 把house Number放到session中,jsp取出来调用查询详情的controller
         httpSession.setAttribute("houseNumber", houseNumber);
         return "proinfo";
+    }
+
+    /**
+     * 跳转经纪人房屋详情页
+     *
+     * @param houseNumber 房屋编号
+     * @return 房屋详情页
+     * @throws IOException
+     */
+    @RequestMapping(value = "/brokerProinfo", method = RequestMethod.GET)
+    public String turnBrokerHouseDetailsPage(int houseNumber, HttpSession httpSession) throws IOException {
+        System.out.println(houseNumber);
+        httpSession.setAttribute("brokerDetailHouseNumber", houseNumber);
+        return "broker_proinfo";
     }
 
     /**
@@ -185,6 +200,23 @@ public class HouseController {
             return JsonUtil.toJSon("notlogin");
         }
         List<HouseVO> houseVOList = houseService.findConcernHouses(username);
+        return JsonUtil.toJSon(houseVOList);
+    }
+
+    /**
+     * 查询经纪人发布的房源
+     *
+     * @param account    账户名
+     * @return 房屋信息列表
+     */
+    @RequestMapping(value = "/findPublishHouse", method = RequestMethod.GET)
+    @ResponseBody
+    public String findPublishHouse(String account) {
+        System.out.println("发布房源:"+ account);
+        if (account == null){
+            return JsonUtil.toJSon("notlogin");
+        }
+        List<HouseVO> houseVOList = houseService.findPublishHouse(account);
         return JsonUtil.toJSon(houseVOList);
     }
 

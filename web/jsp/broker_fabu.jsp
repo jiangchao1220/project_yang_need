@@ -15,10 +15,6 @@
             $(".nav li:eq(6)").addClass("navCur");
             var loginUser = "${loginUser}";
             if (loginUser != "") {
-                var isBorker = "${isBorker}";
-                if (isBorker == "borker") {
-                    window.location = "broker_user_guanzhu.jsp";
-                }
                 $("#alogin").append("<a href='user.jsp'>" + loginUser + "</a>");
             } else {
                 $("#alogin").append("<a href='login.jsp'>登录</a>");
@@ -59,11 +55,11 @@
                 return;
             }
             var username = {
-                "username": loginUser,
+                "account": loginUser,
             };
             $.ajax({
                 type: "GET",
-                url: "..//house/findConcernHouse.do",
+                url: "..//house/findPublishHouse.do",
                 contentType: "application/json;charset=UTF-8",
                 data: username,
                 dataType: "JSON",
@@ -87,7 +83,9 @@
             });
         }
 
-        function deleteConcern(houseNumber) {
+        function deleteHouse(houseNumber) {
+            alert(houseNumber);
+            return;
             var loginUser = "${loginUser}";
             var concernInfo = {
                 "houseNumber": houseNumber,
@@ -119,13 +117,14 @@
             $("#zufanginfo").remove();
             $("#zufang").append(
             "<dl>"
-            +"<dt><a href='../house/proinfo.do?houseNumber="+ houseVO.house.houseNumber +"'><img src='" + houseVO.houseImages[0] + "' width='190' height='128'/></a></dt>"
+            +"<dt><a href='../house/brokerProinfo.do?houseNumber="+ houseVO.house.houseNumber +"'><img src='" + houseVO.houseImages[0] + "' width='190' height='128'/></a></dt>"
              +"   <dd>"
-              +"  <h3><a href='../house/proinfo.do?houseNumber="+ houseVO.house.houseNumber +"'>"+ houseVO.house.houseInfo +"</a></h3>"
+              +"  <h3><a href='../house/brokerProinfo.do?houseNumber="+ houseVO.house.houseNumber +"'>"+ houseVO.house.houseInfo +"</a></h3>"
               +"  <div class='guantext'>"+ houseVO.house.houseLocation +"</div>"
               +"  <div class='guantext'>"+ houseVO.house.houseType +" | "+  houseVO.house.houseArea +"平米 | "+ houseVO.house.houseTowards +"</div>"
-            +"<div class='guantext2'>发布时间："+ houseVO.house.publishDate +" <a href='javascript:;' class='qxgz' onclick='deleteConcern("+ houseVO.house.houseNumber +")'>取消关注</a>"
-             +"   </div>"
+            +"<div class='guantext2'>发布时间："+ houseVO.house.publishDate +"</div>"
+                +"<div><p class='red'>共"+ houseVO.concernNum +"人关注 </p></div>"
+                +"<div> <a href='javascript:;' class='qxgz' onclick='deleteHouse("+ houseVO.house.houseNumber +")'>删除房屋</a></div>"
               +"  </dd>"
               +"  <div class='price'>¥ <strong>"+ houseVO.house.housePrice +"</strong><span class='font12'>元/月</span></div>"
                +" <div class='clearfix'></div>"
@@ -138,22 +137,19 @@
             $(id + "info").remove();
             $(id).append(
                 "<dl>"
-                +"<dt><a href='../house/proinfo.do?houseNumber="+ houseVO.house.houseNumber +"'><img src='" + houseVO.houseImages[0] + "' width='190' height='128'/></a></dt>"
+                +"<dt><a href='../house/brokerProinfo.do?houseNumber="+ houseVO.house.houseNumber +"'><img src='" + houseVO.houseImages[0] + "' width='190' height='128'/></a></dt>"
                 +"   <dd>"
-                +"  <h3><a href='../house/proinfo.do?houseNumber="+ houseVO.house.houseNumber +"'>"+ houseVO.house.houseInfo +"</a></h3>"
+                +"  <h3><a href='../house/brokerProinfo.do?houseNumber="+ houseVO.house.houseNumber +"'>"+ houseVO.house.houseInfo +"</a></h3>"
                 +"  <div class='guantext'>"+ houseVO.house.houseLocation +"</div>"
                 +"  <div class='guantext'>"+ houseVO.house.houseType +" | "+  houseVO.house.houseArea +"平米 | "+ houseVO.house.houseTowards +"</div>"
-                +"<div class='guantext2'>发布时间："+ houseVO.house.publishDate +" <a href='javascript:;' class='qxgz' onclick='deleteConcern("+ houseVO.house.houseNumber +")'>取消关注</a>"
-                +"   </div>"
+                +"<div class='guantext2'>发布时间："+ houseVO.house.publishDate +"</div>"
+                +"<div><p class='red'>共"+ houseVO.concernNum +"人关注 </p></div>"
+                +"<div> <a href='javascript:;' class='qxgz' onclick='deleteHouse("+ houseVO.house.houseNumber +")'>删除房屋</a></div>"
                 +"  </dd>"
                 +"  <div class='price'>¥ <strong>"+ houseVO.house.housePrice +"</strong><span class='font12'>万元</span></div>"
                 +" <div class='clearfix'></div>"
                 +"  </dl>"
             );
-        }
-
-        function ershoufang() {
-
         }
     </script>
 </head>
@@ -184,16 +180,18 @@
     <div class="width1190">
         <div class="vip-left">
             <div class="vipNav">
-                <h3 class="vipTitle">会员中心</h3>
+                <h3 class="vipTitle">经纪人中心</h3>
                 <dl>
                     <dt class="vipIcon3">账户设置</dt>
                     <dd>
-                        <a href="user.jsp">我的资料</a>
-                        <a href="user_pwd.jsp">账户密码设置</a>
+                        <a href="broker_user.jsp">我的资料</a>
+                        <a href="broker_user_pwd.jsp">账户密码设置</a>
                     </dd>
                     <dt class="vipIcon1">我的邻居大妈</dt>
                     <dd>
-                        <a href="user_guanzhu.jsp" class="vipNavCur">关注房源</a>
+                        <a href="broker_user_guanzhu.jsp">关注房源</a>
+                        <a href="broker_fabu.jsp" class="vipNavCur">我的发布</a>
+                        <a href="broker_add_house.jsp">添加房源</a>
                         <a href="javascript:;" onclick="loginout()">退出登录</a>
                     </dd>
                 </dl>
