@@ -17,15 +17,19 @@ public class SignOutServiceImpl implements SignOutService{
         String result = EMPTY;
         String username = (String) httpSession.getAttribute("loginUser");
         if (username == null) {
-            result = "notlogin!";
+            result = "您还未登录!";
             return result;
         } else {
             httpSession.removeAttribute("loginUser");
+            httpSession.removeAttribute("isBorker");
         }
 
         String checkUser = (String) httpSession.getAttribute("loginUser");
-        if (checkUser == null) {
+        String checkIsBroker = (String) httpSession.getAttribute("isBorker");
+        if (checkUser == null && checkIsBroker == null) {
             result = "signoutsuccess";
+        } else {
+            result = "退出失败,请关闭浏览器后重新登录";
         }
         return result;
     }

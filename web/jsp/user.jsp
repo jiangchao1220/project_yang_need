@@ -86,7 +86,7 @@
                             $("#alogin").append("<a href='login.jsp'>登录</a>");
                             window.location = "user.jsp";
                         } else {
-                            alert("您还未登录!");
+                            alert(data);
                         }
                     }, error: function () {
                         alert("ajax error!");
