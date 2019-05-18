@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
@@ -245,5 +246,20 @@ public class HouseController {
     @ResponseBody
     public String cancelConcern(int houseNumber, String username) {
         return JsonUtil.toJSon(houseService.cancelConcern(houseNumber, username));
+    }
+
+    /**
+     * 经纪人发布房屋
+     *
+     * @param session session
+     * @param house   房屋
+     * @return 状态
+     */
+    @RequestMapping(value = "/addHouse", method = RequestMethod.POST)
+    @ResponseBody
+    public String addHouse(HttpSession session, House house) {
+        System.out.println(session.getAttribute("loginUser"));
+        System.out.println(JsonUtil.toJSon(house));
+        return JsonUtil.toJSon("houseController");
     }
 }
