@@ -5,6 +5,7 @@ import com.yang.model.HouseType;
 import com.yang.service.BrokerService;
 import com.yang.service.HouseService;
 import com.yang.service.UserService;
+import com.yang.util.CryptographyUtil;
 import com.yang.util.DateUtil;
 import com.yang.util.JsonUtil;
 import javafx.scene.input.DataFormat;
@@ -21,6 +22,16 @@ import java.util.*;
  * Created by jiang on 2019/3/31.
  */
 public class Test11 {
+    @Test
+    public void md5Test() {
+        String md5Str = CryptographyUtil.md5("aa11111","yc");
+        System.out.println(md5Str);
+        String md5Str3 = CryptographyUtil.md5("jc123456","yc");
+        System.out.println(md5Str3);
+        String md5Str4 = CryptographyUtil.md5("321","yc");
+        System.out.println(md5Str4);
+    }
+
     @Test
     public void brokerServiceTest() {
         ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");

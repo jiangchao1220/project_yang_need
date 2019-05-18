@@ -5,6 +5,7 @@ import com.yang.dao.UserDao;
 import com.yang.entity.Broker;
 import com.yang.entity.User;
 import com.yang.service.BrokerService;
+import com.yang.util.CryptographyUtil;
 import com.yang.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,8 +31,8 @@ public class BrokerServiceImpl implements BrokerService {
         if (check(username, password)) {
             return "账号密码不能为空!";
         }
-
-        Broker broker = brokerDao.findBroker(username, password);
+        String md5Password = CryptographyUtil.md5(password, "yc");
+        Broker broker = brokerDao.findBroker(username, md5Password);
         if (broker == null) {
             msg = "failed";
         } else {

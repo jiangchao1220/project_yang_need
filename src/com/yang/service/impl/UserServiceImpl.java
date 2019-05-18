@@ -6,6 +6,7 @@ import com.yang.entity.ConcernHouse;
 import com.yang.entity.User;
 import com.yang.entity.UserInfo;
 import com.yang.service.UserService;
+import com.yang.util.CryptographyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User loginUser(User user) {
-
+        user.setPassword(CryptographyUtil.md5(user.getPassword(), "yc"));
         User u = null;
         u = userDao.loginUser(user);
         return u;
@@ -43,6 +44,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean addNewUser(User user) {
+        user.setPassword(CryptographyUtil.md5(user.getPassword(), "yc"));
         int success = userDao.addNewUser(user);
         if (success == 1) {
             return true;
