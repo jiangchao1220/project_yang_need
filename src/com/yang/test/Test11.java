@@ -7,6 +7,7 @@ import com.yang.service.HouseService;
 import com.yang.service.UserService;
 import com.yang.util.CryptographyUtil;
 import com.yang.util.DateUtil;
+import com.yang.util.FileUtil;
 import com.yang.util.JsonUtil;
 import javafx.scene.input.DataFormat;
 import org.junit.Test;
@@ -25,10 +26,13 @@ import java.util.*;
 public class Test11 {
     @Test
     public void fileDelteTest() {
-        File tempFile = new File("F:\\test" + File.separator + "c.gif");
-        if (tempFile.exists()) {
-            tempFile.delete();
-        }
+//        File tempFile = new File("F:\\test" + File.separator + "c.gif");
+//        if (tempFile.exists()) {
+//            tempFile.delete();
+//        }
+        String s = "images\\2019051921482753.jpg";
+        String[] ss = s.split(""+ File.separator + File.separator);
+        System.out.println(ss[1]);
     }
 
     @Test

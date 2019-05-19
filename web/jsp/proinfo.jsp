@@ -43,7 +43,7 @@
                 success: function (data) {
                     // 租房信息
                     if (data.house.type == 1) {
-                        $("#f1_image").append("<img src='<%=basePath%>/" + data.houseImages[0] + "'/>");
+                        $("#f1_image").append("<img src='<%=basePath%>/" + data.houseImages[0] + "' width='286' height='188'/>");
                         $("#proTitle").append("出租房信息: " + data.house.houseInfo);
 
                         var text = "编号：" + data.house.houseNumber
@@ -59,13 +59,13 @@
 
                         var proList = data.house.houseDetails + "<br/>";
                         for (var i = 0; i < data.houseImages.length; i++) {
-                            proList = proList + "<img src='<%=basePath%>/" + data.houseImages[i] + "'/>"
+                            proList = proList + "<img src='<%=basePath%>/" + data.houseImages[i] + "' width='286' height='188'/>"
                         }
                         $("#proList").append(proList);
 
                         var proList_img = "";
                         for (var i = 0; i < data.houseImages.length; i++) {
-                            proList_img = proList_img + "<img src='<%=basePath%>/" + data.houseImages[i] + "'/>"
+                            proList_img = proList_img + "<img src='<%=basePath%>/" + data.houseImages[i] + "' width='286' height='188'/>"
                         }
                         $("#proList_img").append(proList_img);
 
@@ -74,7 +74,7 @@
 
                     // 新房信息
                     if (data.house.type == 2) {
-                        $("#f1_image").append("<img src='<%=basePath%>/" + data.houseImages[0] + "'/>");
+                        $("#f1_image").append("<img src='<%=basePath%>/" + data.houseImages[0] + "' width='286' height='188'/>");
                         $("#proTitle").append("新房信息: " + data.house.houseInfo);
 
                         var text = "编号：" + data.house.houseNumber
@@ -90,13 +90,13 @@
 
                         var proList = data.house.houseDetails + "<br/>";
                         for (var i = 0; i < data.houseImages.length; i++) {
-                            proList = proList + "<img src='<%=basePath%>/" + data.houseImages[i] + "'/>"
+                            proList = proList + "<img src='<%=basePath%>/" + data.houseImages[i] + "' width='286' height='188'/>"
                         }
                         $("#proList").append(proList);
 
                         var proList_img = "";
                         for (var i = 0; i < data.houseImages.length; i++) {
-                            proList_img = proList_img + "<img src='<%=basePath%>/" + data.houseImages[i] + "'/>"
+                            proList_img = proList_img + "<img src='<%=basePath%>/" + data.houseImages[i] + "' width='286' height='188'/>"
                         }
                         $("#proList_img").append(proList_img);
 
@@ -105,7 +105,7 @@
 
                     // 二手房信息
                     if (data.house.type == 3) {
-                        $("#f1_image").append("<img src='<%=basePath%>/" + data.houseImages[0] + "'/>");
+                        $("#f1_image").append("<img src='<%=basePath%>/" + data.houseImages[0] + "' width='286' height='188'/>");
                         $("#proTitle").append("二手房信息: " + data.house.houseInfo);
 
                         var text = "编号：" + data.house.houseNumber
@@ -121,13 +121,13 @@
 
                         var proList = data.house.houseDetails + "<br/>";
                         for (var i = 0; i < data.houseImages.length; i++) {
-                            proList = proList + "<img src='<%=basePath%>/" + data.houseImages[i] + "'/>"
+                            proList = proList + "<img src='<%=basePath%>/" + data.houseImages[i] + "' width='286' height='188'/>"
                         }
                         $("#proList").append(proList);
 
                         var proList_img = "";
                         for (var i = 0; i < data.houseImages.length; i++) {
-                            proList_img = proList_img + "<img src='<%=basePath%>/" + data.houseImages[i] + "'/>"
+                            proList_img = proList_img + "<img src='<%=basePath%>/" + data.houseImages[i] + "' width='286' height='188'/>"
                         }
                         $("#proList_img").append(proList_img);
 

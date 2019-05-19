@@ -105,4 +105,13 @@ public interface HouseService {
      * @return 状态
      */
     FileUploadState saveImages(MultipartFile[] uploadFiles, String account);
+
+    /**
+     * 删除房屋
+     *
+     * @param account 账号
+     * @param houseNumber 编号
+     * @return 状态
+     */
+    String deleteHouse(String account, int houseNumber);
 }

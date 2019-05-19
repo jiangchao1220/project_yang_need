@@ -84,25 +84,23 @@
         }
 
         function deleteHouse(houseNumber) {
-            alert(houseNumber);
-            return;
             var loginUser = "${loginUser}";
-            var concernInfo = {
+            var houseInfo = {
                 "houseNumber": houseNumber,
-                "username": loginUser,
+                "account": loginUser,
             };
-            var msg = "取消关注?"
+            var msg = "确认删除该房屋?"
             var result = confirm(msg);
             if (result) {
                 $.ajax({
                     type: "GET",
-                    url: "..//house/cancelConcern.do",
+                    url: "..//house/deleteHouse.do",
                     contentType: "application/json;charset=UTF-8",
-                    data: concernInfo,
+                    data: houseInfo,
                     dataType: "JSON",
                     success: function (data) {
                         if (data == "deletesuccessed") {
-                            window.location = "user_guanzhu.jsp";
+                            window.location = "broker_fabu.jsp";
                         } else {
                             alert(data);
                         }

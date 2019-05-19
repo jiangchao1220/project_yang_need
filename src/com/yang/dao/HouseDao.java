@@ -96,6 +96,30 @@ public interface HouseDao {
      */
     int deleteConcern(String username, int houseNumber);
 
+    /**
+     * 删除当前编号下的所有关注信息
+     *
+     * @param houseNumber 房屋编号
+     * @return 删除条数
+     */
+    int deleteConcernData(int houseNumber);
+
+    /**
+     * 删除当前编号下的发布人绑定表broker_house
+     *
+     * @param houseNumber 房屋编号
+     * @return 删除条数
+     */
+    int deleteBrokerHouseData(int houseNumber);
+
+    /**
+     * 删除当前编号的房屋信息house表数据
+     *
+     * @param houseNumber 房屋编号
+     * @return 删除条数
+     */
+    int deleteHouseData(int houseNumber);
+
     //添加关注房屋
     int insertConcern(String username, int houseNumber);
 

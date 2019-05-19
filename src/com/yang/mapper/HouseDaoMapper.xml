@@ -61,6 +61,18 @@
 		DELETE from user_concern WHERE username=#{arg0} AND house_number=#{arg1}
 	</delete>
 
+	<delete id="deleteConcernData">
+		DELETE from user_concern WHERE house_number=#{arg0}
+	</delete>
+
+	<delete id="deleteBrokerHouseData">
+		DELETE from broker_house WHERE house_number=#{arg0}
+	</delete>
+
+	<delete id="deleteHouseData">
+		DELETE from house WHERE house_number=#{arg0}
+	</delete>
+
 	<select id="findConcern" resultType="com.yang.entity.ConcernHouse">
 		SELECT * FROM `user_concern` WHERE username=#{arg0} AND house_number=#{arg1}
 	</select>

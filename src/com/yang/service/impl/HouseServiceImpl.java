@@ -69,8 +69,8 @@ public class HouseServiceImpl implements HouseService {
         // 明天日期
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(new Date());
-        calendar.add(calendar.DATE,1);
-        String tomorrow= dateFormat.format(calendar.getTime());
+        calendar.add(calendar.DATE, 1);
+        String tomorrow = dateFormat.format(calendar.getTime());
         // 一周前日期
         String servenDaysAgo = DateUtil.getLastDate(tomorrow, 8);
 
@@ -229,10 +229,10 @@ public class HouseServiceImpl implements HouseService {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            return new FileUploadState("fail", newNum,fileNameList);
+            return new FileUploadState("fail", newNum, fileNameList);
         }
         if (insertNum > 0) {
-            return new FileUploadState("success", newNum,fileNameList);
+            return new FileUploadState("success", newNum, fileNameList);
         } else {
             // 删除已经添加的文件
             for (String fileName : fileNameList) {
@@ -243,6 +243,30 @@ public class HouseServiceImpl implements HouseService {
             return new FileUploadState("fail", Integer.MIN_VALUE, null);
         }
 
+    }
+
+    @Override
+    public String deleteHouse(String account, int houseNumber) {
+        //1.查询房屋图片
+        List<String> imagesList = houseDao.getHouseImges(houseNumber);
+        //2.删除图片表数据
+        houseDao.delteImages(houseNumber);
+        //3.删除图片文件
+        for (String str : imagesList) {
+            String[] strs = str.split(""+ File.separator + File.separator);
+            FileUtil.deleteFileByFileName(strs[1]);
+        }
+        //4.删除house表数据
+        int b = houseDao.deleteHouseData(houseNumber);
+        //5.删除broker_house表数据
+        houseDao.deleteBrokerHouseData(houseNumber);
+        //6.删除user_concern表数据
+        houseDao.deleteConcernData(houseNumber);
+        if (b > 0) {
+            return "deletesuccessed";
+        } else {
+            return "删除失败,请联系管理员!";
+        }
     }
 
     private int getNewNumber() {

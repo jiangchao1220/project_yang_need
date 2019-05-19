@@ -273,4 +273,10 @@ public class HouseController {
             @RequestParam(value = "images", required = false) MultipartFile[] uploadFiles) {
         return JsonUtil.toJSon(houseService.saveImages(uploadFiles, String.valueOf(session.getAttribute("loginUser"))));
     }
+
+    @RequestMapping(value = "/deleteHouse", method = RequestMethod.GET)
+    @ResponseBody
+    public String deleteHouse(String account, int houseNumber) {
+        return JsonUtil.toJSon(houseService.deleteHouse(account, houseNumber));
+    }
 }
