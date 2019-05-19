@@ -145,7 +145,32 @@
         }
 
         function deleteHouse() {
-            alert("TODO删除房屋:" + houseNum);
+            var loginUser = "${loginUser}";
+            var houseInfo = {
+                "houseNumber": houseNum,
+                "account": loginUser,
+            };
+            var msg = "确认删除该房屋?"
+            var result = confirm(msg);
+            if (result) {
+                $.ajax({
+                    type: "GET",
+                    url: "..//house/deleteHouse.do",
+                    contentType: "application/json;charset=UTF-8",
+                    data: houseInfo,
+                    dataType: "JSON",
+                    success: function (data) {
+                        if (data == "deletesuccessed") {
+                            alert("删除成功!");
+                            window.location = "<%=basePath%>/broker_fabu.jsp";
+                        } else {
+                            alert(data);
+                        }
+                    }, error: function () {
+                        alert("ajax error!");
+                    }
+                });
+            }
         }
     </script>
 </head>
