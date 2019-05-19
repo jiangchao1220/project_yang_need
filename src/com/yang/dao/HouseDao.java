@@ -116,6 +116,14 @@ public interface HouseDao {
     int insertImages(List<Image> imageList);
 
     /**
+     *删除图片表数据
+     *
+     * @param houseNumber 房屋编号
+     * @return 条数
+     */
+    int delteImages(int houseNumber);
+
+    /**
      * 插入house表
      *
      * @param house 房屋

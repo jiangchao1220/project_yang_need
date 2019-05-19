@@ -88,6 +88,10 @@
 		</foreach>
 	</select>
 
+	<delete id="delteImages">
+		DELETE from img WHERE house_number=#{arg0}
+	</delete>
+
 	<insert id="insertImages" parameterType="com.yang.entity.Image">
 		INSERT INTO img(house_number, img_path)
 		VALUES

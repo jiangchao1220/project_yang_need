@@ -229,12 +229,18 @@ public class HouseServiceImpl implements HouseService {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            return new FileUploadState("fail", 0,fileNameList);
+            return new FileUploadState("fail", newNum,fileNameList);
         }
         if (insertNum > 0) {
             return new FileUploadState("success", newNum,fileNameList);
         } else {
-            return new FileUploadState("fail", 0,fileNameList);
+            // 删除已经添加的文件
+            for (String fileName : fileNameList) {
+                FileUtil.deleteFileByFileName(fileName);
+            }
+            //删除数据库
+            houseDao.delteImages(newNum);
+            return new FileUploadState("fail", Integer.MIN_VALUE, null);
         }
 
     }

@@ -15,6 +15,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import javax.servlet.http.HttpSession;
 import javax.xml.bind.util.JAXBSource;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -22,6 +23,14 @@ import java.util.*;
  * Created by jiang on 2019/3/31.
  */
 public class Test11 {
+    @Test
+    public void fileDelteTest() {
+        File tempFile = new File("F:\\test" + File.separator + "c.gif");
+        if (tempFile.exists()) {
+            tempFile.delete();
+        }
+    }
+
     @Test
     public void savrImgTest() {
         String imgPath = this.getClass().getClassLoader().getResource("").getPath();

@@ -24,6 +24,17 @@ public final class FileUtil {
         return msg;
     }
 
+    public static void deleteFileByFileName(String fileName) {
+        File tempFile = new File(OUT_IMAGES_PATH + File.separator + fileName);
+        File tempFile2 = new File(PROJECT_IMAGES_PATH + File.separator + fileName);
+        if (tempFile.exists()) {
+            tempFile.delete();
+        }
+        if (tempFile2.exists()) {
+            tempFile2.delete();
+        }
+    }
+
     private static void savePic(InputStream inputStream, String fileName) throws IOException {
 
         OutputStream os = null;

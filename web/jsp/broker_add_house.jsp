@@ -133,8 +133,6 @@
                 contentType: false,
                 success: function (data) {
                     if (data.state == "fail") {
-                        //TODO
-                        //删除图片
                         alert("添加失败,请稍后重试!");
                     } else if (data.state == "success") {
                         //添加house信息
@@ -146,8 +144,8 @@
             });
         }
 
-        function addHouse(data,house) {
-            house.houseNumber = data.houseNumber;
+        function addHouse(datastate,house) {
+            house.houseNumber = datastate.houseNumber;
             $.ajax({
                 type: "POST",
                 url: "..//house/addHouse.do",
@@ -159,6 +157,8 @@
                         alert(data);
                         window.location = "broker_fabu.jsp";
                     } else {
+                        //TODO 删除已上传的图片
+//                        deleteUploadImg(datastate);
                         alert("未知错误, 请稍后重试!");
                     }
                 }, error: function () {
@@ -166,6 +166,21 @@
                 }
             });
         }
+
+//        function deleteUploadImg(date) {
+//            $.ajax({
+//                type: "POST",
+//                url: "..//house/addHouse.do",
+//                contentType: "application/x-www-form-urlencoded;charset=UTF-8",
+//                data: date,
+//                dataType: "JSON",
+//                success: function (data) {
+//                    console.log(data);
+//                }, error: function () {
+//                    alert("ajax error!");
+//                }
+//            });
+//        }
 
         function getFile() {
             var formData = new FormData();
