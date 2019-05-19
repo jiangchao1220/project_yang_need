@@ -3,6 +3,8 @@ package com.yang.dao;
 import com.yang.entity.Broker;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * Created by jiang on 2019/5/12.
  */
@@ -57,4 +59,22 @@ public interface BrokerDao {
      * @return int
      */
     int updateBrokerInfo(Broker broker);
+
+    /**
+     * 查询经纪人发布的房屋列表
+     *
+     * @param account account
+     * @return int
+     */
+    List<Integer> findBrokerHouse(String account);
+
+    /**
+     * 更新房屋表中的发布人信息
+     *
+     * @param name broker姓名
+     * @param phone broker电话
+     * @param number 房屋编号
+     * @return
+     */
+    int undateHouse(String name, String phone, Integer number);
 }

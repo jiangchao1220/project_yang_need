@@ -14,6 +14,7 @@ import org.springframework.util.StringUtils;
 import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.List;
 
 /**
  * Created by jiang on 2019/5/12.
@@ -85,6 +86,12 @@ public class BrokerServiceImpl implements BrokerService {
         broker.setName(URLDecoder.decode(broker.getName(), "UTF-8"));
         broker.setInfo(URLDecoder.decode(broker.getInfo(), "UTF-8"));
         int num = brokerDao.updateBrokerInfo(broker);
+        //查询发布人发布的房屋编号
+        List<Integer> numberList = brokerDao.findBrokerHouse(broker.getAccout());
+        //更新house表中发布人信息
+        for (Integer number : numberList) {
+            brokerDao.undateHouse(broker.getName(), broker.getPhone(), number);
+        }
         String msg;
         if (num == 1) {
             msg = "修改成功";

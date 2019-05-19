@@ -11,6 +11,10 @@
 		SELECT * FROM `broker` WHERE accout=#{arg0}
 	</select>
 
+	<select id="findBrokerHouse" resultType="int">
+		SELECT house_number FROM `broker_house` WHERE broker_accout=#{arg0}
+	</select>
+
 	<select id="getBrokerInfo" resultType="broker">
 		SELECT * FROM `broker` WHERE accout=#{arg0}
 	</select>
@@ -26,6 +30,10 @@
 
 	<update id="updateBrokerInfo" parameterType="broker">
 		UPDATE broker SET phone=#{phone},name=#{name},sex=#{sex},info=#{info},age=#{age} WHERE accout=#{accout}
+	</update>
+
+	<update id="undateHouse">
+		UPDATE house SET publisher_phone=#{arg1},publisher=#{arg0} WHERE house_number=#{arg2}
 	</update>
 
 
