@@ -154,8 +154,8 @@
                 dataType: "JSON",
                 success: function (data) {
                     if (data == "success") {
-                        alert(data);
-                        window.location = "broker_fabu.jsp";
+                        alert("添加成功!");
+                        window.location = "..//house/brokerProinfo.do?houseNumber=" + datastate.houseNumber;
                     } else {
                         //TODO 删除已上传的图片
 //                        deleteUploadImg(datastate);
