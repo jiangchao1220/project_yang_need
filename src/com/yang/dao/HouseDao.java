@@ -1,9 +1,6 @@
 package com.yang.dao;
 
-import com.yang.entity.ConcernHouse;
-import com.yang.entity.House;
-import com.yang.entity.IndexHouse;
-import com.yang.entity.IndexHouseInfo;
+import com.yang.entity.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -101,4 +98,37 @@ public interface HouseDao {
 
     //添加关注房屋
     int insertConcern(String username, int houseNumber);
+
+    /**
+     * 查询房屋编号是否存在
+     *
+     * @param houseNumber 房屋编号
+     * @return 条数
+     */
+    int checkNewHouseNumber(int houseNumber);
+
+    /**
+     *插入图片表
+     *
+     * @param imageList 房屋编号
+     * @return 条数
+     */
+    int insertImages(List<Image> imageList);
+
+    /**
+     * 插入house表
+     *
+     * @param house 房屋
+     * @return 插入条数
+     */
+    int insertHouse(House house);
+
+    /**
+     * 经纪人与发布房屋绑定
+     *
+     * @param account     账号
+     * @param houseNumber 编号
+     * @return 插入条数
+     */
+    int bindBrokerHouse(String account, int houseNumber);
 }

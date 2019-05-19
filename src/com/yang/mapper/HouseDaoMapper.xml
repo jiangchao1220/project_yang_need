@@ -77,12 +77,39 @@
 		SELECT COUNT(id) FROM user_concern WHERE house_number=#{arg0}
 	</select>
 
+	<select id="checkNewHouseNumber" resultType="int">
+		SELECT COUNT(house_number) FROM house WHERE house_number=#{arg0}
+	</select>
+
 	<select id="findAllConcernHouse" parameterType="java.util.List" resultMap="HouseMap">
 		SELECT * FROM `house` WHERE house_number IN
 		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
 			#{item}
 		</foreach>
 	</select>
+
+	<insert id="insertImages" parameterType="com.yang.entity.Image">
+		INSERT INTO img(house_number, img_path)
+		VALUES
+		<foreach item="item" index="index" collection="list" separator =",">
+			(#{item.houseNumber},#{item.imgPath})
+		</foreach>
+	</insert>
+
+	<insert id="insertHouse" parameterType="com.yang.entity.House">
+		INSERT INTO house
+		(house_number, house_info, house_price, house_type,house_area,house_towards,
+		house_floor,house_decorationtype,house_address,type,house_details,introduced,location,publisher,
+		publisher_phone,publish_date)
+		VALUES
+		(#{houseNumber},#{houseInfo},#{housePrice},#{houseType},#{houseArea},#{houseTowards},#{houseFloor},
+		#{houseDecorationtype},#{houseAddress},#{type},#{houseDetails},#{introduced},#{houseLocation},#{publisher},
+		#{publisherPhone},#{publishDate})
+	</insert>
+
+	<insert id="bindBrokerHouse">
+		INSERT INTO broker_house(broker_accout, house_number) VALUES (#{arg0},#{arg1})
+	</insert>
 
 </mapper>
 

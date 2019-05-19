@@ -3,7 +3,9 @@ package com.yang.service;
 import com.yang.entity.House;
 import com.yang.entity.HouseVO;
 import com.yang.entity.IndexHouse;
+import com.yang.model.FileUploadState;
 import com.yang.model.HouseType;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -85,4 +87,22 @@ public interface HouseService {
      * @return 状态
      */
     String cancelConcern(int houseNumber, String username);
+
+    /**
+     * 插入房源
+     *
+     * @param house   房屋
+     * @param account 用户名
+     * @return 状态
+     */
+    String insertHouse(House house, String account);
+
+    /**
+     * 保存房屋图片
+     *
+     * @param uploadFiles 房屋图片
+     * @param account     用户名
+     * @return 状态
+     */
+    FileUploadState saveImages(MultipartFile[] uploadFiles, String account);
 }

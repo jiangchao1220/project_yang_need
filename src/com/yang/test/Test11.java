@@ -23,6 +23,20 @@ import java.util.*;
  */
 public class Test11 {
     @Test
+    public void savrImgTest() {
+        String imgPath = this.getClass().getClassLoader().getResource("").getPath();
+        System.out.println(imgPath);
+        String time = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+        for (int i =0; i<5; i++){
+            int imgRandomNum = (int) (Math.random() * 100);
+            String fileName = time + imgRandomNum;
+            System.out.println(fileName);
+        }
+        int intFlag = (int) (Math.random() * 1000000);
+        System.out.println(intFlag+"**********");
+    }
+
+    @Test
     public void md5Test() {
         String md5Str = CryptographyUtil.md5("aa11111","yc");
         System.out.println(md5Str);

@@ -13,12 +13,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-import static com.yang.model.HouseType.*;
+import static com.yang.model.HouseType.findByValue;
 
 /**
  * Created by jiang on 2019/4/18.
@@ -258,8 +261,16 @@ public class HouseController {
     @RequestMapping(value = "/addHouse", method = RequestMethod.POST)
     @ResponseBody
     public String addHouse(HttpSession session, House house) {
-        System.out.println(session.getAttribute("loginUser"));
+        String account = String.valueOf(session.getAttribute("loginUser"));
         System.out.println(JsonUtil.toJSon(house));
-        return JsonUtil.toJSon("houseController");
+        return JsonUtil.toJSon(houseService.insertHouse(house, account));
+    }
+
+    @RequestMapping(value = "/addHouseByFromData", method = RequestMethod.POST)
+    @ResponseBody
+    public String addHouseByFromData(
+            HttpSession session,
+            @RequestParam(value = "images", required = false) MultipartFile[] uploadFiles) {
+        return JsonUtil.toJSon(houseService.saveImages(uploadFiles, String.valueOf(session.getAttribute("loginUser"))));
     }
 }

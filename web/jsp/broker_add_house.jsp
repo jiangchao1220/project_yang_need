@@ -19,7 +19,7 @@
             if (loginUser != "") {
                 $("#alogin").append("<a href='<%=basePath%>/user.jsp'>" + loginUser + "</a>");
                 $("#my_account").append(loginUser);
-                } else {
+            } else {
                 $("#alogin").append("<a href='<%=basePath%>/login.jsp'>登录</a>");
                 $(".vip-right").empty();
                 $(".vip-right").append("<h2 class='vipright-title'>房屋信息发布</h2><div><h1>未登陆!</h1></div>");
@@ -66,23 +66,23 @@
         }
 
         function checkInput(house) {
-                for (var item in house) {
-                    //校验是否有没有输入的参数以及是否有全部为空的输入
-                    if (item != null && Trim(house[item],"g") == "") {
-                        return true;
-                    }
+            for (var item in house) {
+                //校验是否有没有输入的参数以及是否有全部为空的输入
+                if (item != null && Trim(house[item], "g") == "") {
+                    return true;
                 }
+            }
             return false;
         }
 
         /*去除空格*/
-        function Trim(str,is_global) {
-            var result;
-            result = str.replace(/(^\s+)|(\s+$)/g,"");
-            if(is_global.toLowerCase()=="g") {
-                result = result.replace(/\s/g,"");
+        function Trim(str, is_global) {
+            var result;
+            result = str.replace(/(^\s+)|(\s+$)/g, "");
+            if (is_global.toLowerCase() == "g") {
+                result = result.replace(/\s/g, "");
             }
-            return result;
+            return result;
         }
 
         function add_house() {
@@ -118,6 +118,36 @@
                 alert("请输入完整房屋信息");
                 return;
             }
+            var formdata = getFile();
+            if (!checkFile(formdata)) {
+                alert("请上传房屋图片");
+                return;
+            }
+            $.ajax({
+                type: "POST",
+                url: "..//house/addHouseByFromData.do",
+                cache: false,
+                data: formdata,
+                dataType:"JSON",
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    if (data.state == "fail") {
+                        //TODO
+                        //删除图片
+                        alert("添加失败,请稍后重试!");
+                    } else if (data.state == "success") {
+                        //添加house信息
+                        addHouse(data,house);
+                    }
+                }, error: function () {
+                    alert("ajax error!");
+                }
+            });
+        }
+
+        function addHouse(data,house) {
+            house.houseNumber = data.houseNumber;
             $.ajax({
                 type: "POST",
                 url: "..//house/addHouse.do",
@@ -125,22 +155,69 @@
                 data: house,
                 dataType: "JSON",
                 success: function (data) {
-                    alert(data);
+                    if (data == "success") {
+                        alert(data);
+                        window.location = "broker_fabu.jsp";
+                    } else {
+                        alert("未知错误, 请稍后重试!");
+                    }
                 }, error: function () {
                     alert("ajax error!");
                 }
             });
         }
 
+        function getFile() {
+            var formData = new FormData();
+            var fileInput = document.getElementsByName("file_input");
+            for (var i = 0; i < fileInput.length; i++) {
+                var inputId = fileInput[i].id;
+                var img_input = document.getElementById(inputId);
+                var img_file = img_input.files[0];
+                console.log(img_file);
+                formData.append("images", img_file);
+            }
+            return formData;
+        }
 
-        function show() {
-            var fileTag = document.getElementById('file');
+        function checkFile(formdata) {
+            //校验是否有图片上传
+            if (formdata.get("images") == "undefined") {
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        function add_img_div() {
+            var count = document.getElementsByName("file_input").length;
+            var newcount = count + 1;
+            if (count == 5) {
+                $("#msg").empty();
+                $("#msg").append("最多上传5张图片");
+                return;
+            }
+            console.log("个数:" + count);
+            $(".vip-touxiang").append(
+                "<dt><img src='images/tx.jpg' id='img" + newcount + "' width='100' height='100'/></dt>"
+                + "<dd>"
+                + "<h3><strong>点击选择文件上传房屋图片</strong></h3>"
+                + "<div class='sctx'><input type='file' id='file" + newcount + "' name='file_input' onclick='show(this)'/><a href='javascript:;'>上传</a></div>"
+                + "  <p>图片格式：GIF、JPG、JPEG、PNG</p>"
+                + "</dd>"
+                + "<div class='clearfix'></div>");
+        }
+
+        function show(obj) {
+            var num = obj.id.replace(/[a-zA-Z]/g, "");
+            console.log("这是第" + num + "个图片div")
+            var fileTag = document.getElementById('file' + num);
             fileTag.onchange = function () {
                 var file = fileTag.files[0];
                 var fileReader = new FileReader();
                 fileReader.onloadend = function () {
                     if (fileReader.readyState == fileReader.DONE) {
-                        document.getElementById('img').setAttribute('src', fileReader.result);
+                        document.getElementById('img' + num).setAttribute('src', fileReader.result);
                     }
                 };
                 fileReader.readAsDataURL(file);
@@ -185,7 +262,7 @@
                     <dd>
                         <a href="broker_user_guanzhu.jsp">关注房源</a>
                         <a href="broker_fabu.jsp">我的发布</a>
-                        <a href="broker_add_house.jsp"  class="vipNavCur">添加房源</a>
+                        <a href="broker_add_house.jsp" class="vipNavCur">添加房源</a>
                         <a href="javascript:;" onclick="loginout()">退出登录</a>
                     </dd>
                 </dl>
@@ -194,21 +271,27 @@
         <div class="vip-right">
             <h2 class="vipright-title">房屋信息发布</h2>
 
-            <div>
-                <img src="${pageContext.request.contextPath}/jsp/images/tx.jpg" id="img" style="width:180px;height:200px;"/>
-            </div>
-            <input type="file" id="file" onclick="show()"/>
+            <%--<div>--%>
+            <%--<img src="${pageContext.request.contextPath}/jsp/images/tx.jpg" id="img" style="width:180px;height:200px;"/>--%>
+            <%--</div>--%>
+            <%--<input type="file" id="file" onclick="show()"/>--%>
 
-            <form action="#" method="get">
+            <form action="#" id="form11" method="get" enctype="multipart/form-data">
                 <dl class="vip-touxiang">
-                    <dt><img src="images/tx.jpg" width="100" height="100"/></dt>
+                    <dt><img src="images/tx.jpg" id="img1" width="100" height="100"/></dt>
                     <dd>
                         <h3><strong>点击选择文件上传房屋图片</strong></h3>
-                        <div class="sctx"><input type="file"/><a href="javascript:;">上传</a></div>
+                        <div class="sctx"><input type="file" id="file1" name="file_input" onclick="show(this)"/><a
+                                href="javascript:;">上传</a></div>
                         <p>图片格式：GIF、JPG、JPEG、PNG</p>
                     </dd>
                     <div class="clearfix"></div>
                 </dl><!--vip-touxiang/-->
+                <span class="red" id="msg"></span>
+                <div class="sctx" name="add_images">
+                    <input type="button"/>
+                    <a href="javascript:;" onclick="add_img_div()">添加图片</a>
+                </div>
             </form>
             <table class="grinfo">
                 <tbody>
