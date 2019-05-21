@@ -51,11 +51,11 @@ public class Test11 {
 
     @Test
     public void md5Test() {
-        String md5Str = CryptographyUtil.md5("aa11111","yc");
+        String md5Str = CryptographyUtil.md5("aa11111");
         System.out.println(md5Str);
-        String md5Str3 = CryptographyUtil.md5("jc123456","yc");
+        String md5Str3 = CryptographyUtil.md5("jc123456");
         System.out.println(md5Str3);
-        String md5Str4 = CryptographyUtil.md5("321","yc");
+        String md5Str4 = CryptographyUtil.md5("321");
         System.out.println(md5Str4);
     }
 

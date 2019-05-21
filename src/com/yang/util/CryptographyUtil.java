@@ -9,10 +9,10 @@ public class CryptographyUtil {
     /**
      * Md5加密
      * @param str
-     * @param salt
      * @return
      */
-    public static String md5(String str,String salt){
+    public static String md5(String str){
+        String salt = "yc";
         return new Md5Hash(str,salt).toString();
     }
 }

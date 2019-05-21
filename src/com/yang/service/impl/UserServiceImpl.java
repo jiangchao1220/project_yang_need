@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User loginUser(User user) {
-        user.setPassword(CryptographyUtil.md5(user.getPassword(), "yc"));
+        user.setPassword(CryptographyUtil.md5(user.getPassword()));
         User u = null;
         u = userDao.loginUser(user);
         return u;
@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean addNewUser(User user) {
-        user.setPassword(CryptographyUtil.md5(user.getPassword(), "yc"));
+        user.setPassword(CryptographyUtil.md5(user.getPassword()));
         int success = userDao.addNewUser(user);
         if (success == 1) {
             return true;
@@ -57,11 +57,12 @@ public class UserServiceImpl implements UserService {
     public int updatePassword(String userName, String password) {
         User user = new User();
         user.setName(userName);
-        user.setPassword(password);
+        user.setPassword(CryptographyUtil.md5(password));
         int isSuccess = userDao.updatePwd(user);
         //兼容经纪人账号
         if (isSuccess == 0) {
-            isSuccess = brokerDao.updatePassword(userName,password);
+            String md5Pwd = CryptographyUtil.md5(password);
+            isSuccess = brokerDao.updatePassword(userName,md5Pwd);
         }
         return isSuccess;
     }
