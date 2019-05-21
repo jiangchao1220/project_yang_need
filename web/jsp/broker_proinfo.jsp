@@ -141,7 +141,7 @@
         })
 
         function edit() {
-            alert("TODO修改房屋:" + houseNum);
+            window.location = "<%=basePath%>/broker_edit_house.jsp";
         }
 
         function deleteHouse() {
