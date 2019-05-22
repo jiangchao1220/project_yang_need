@@ -199,10 +199,14 @@ public class HouseServiceImpl implements HouseService {
 
     @Override
     public FileUploadState saveImages(MultipartFile[] uploadFiles, String account) {
-        String time = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-        String msg = "";
         // 生成房屋编号
         int newNum = getNewNumber();
+        return saveImg(uploadFiles, newNum);
+    }
+
+    private FileUploadState saveImg(MultipartFile[] uploadFiles, int newNum) {
+        String time = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+        String msg = "";
         List<Image> imageList = new ArrayList<>();
         List<String> fileNameList = new ArrayList<>();
         int insertNum = 0;
@@ -242,7 +246,11 @@ public class HouseServiceImpl implements HouseService {
             houseDao.delteImages(newNum);
             return new FileUploadState("fail", Integer.MIN_VALUE, null);
         }
+    }
 
+    @Override
+    public String saveImagesByHouseNum(MultipartFile[] uploadFiles, int houseNum) {
+        return saveImg(uploadFiles, houseNum).getState();
     }
 
     @Override
@@ -266,6 +274,30 @@ public class HouseServiceImpl implements HouseService {
             return "deletesuccessed";
         } else {
             return "删除失败,请联系管理员!";
+        }
+    }
+
+    @Override
+    public String updateHouse(House house) {
+        int num = houseDao.updateHouse(house);
+        if (num == 1) {
+            return "success";
+        } else {
+            return "fail";
+        }
+    }
+
+    @Override
+    public String deleteImage(String imageName, int houseNumber) {
+        //1.删除图片文件
+        String[] strs = imageName.split(""+ File.separator + File.separator);
+        FileUtil.deleteFileByFileName(strs[1]);
+        //2.删除数据库图片路径
+        int num = houseDao.deleteImage(imageName, houseNumber);
+        if (num == 1) {
+            return "success";
+        } else {
+            return "fail";
         }
     }
 

@@ -163,4 +163,21 @@ public interface HouseDao {
      * @return 插入条数
      */
     int bindBrokerHouse(String account, int houseNumber);
+
+    /**
+     * 删除房屋图片
+     *
+     * @param imageName   图片文件路径
+     * @param houseNumber 房屋编号
+     * @return
+     */
+    int deleteImage(String imageName, int houseNumber);
+
+    /**
+     * 修改房屋
+     *
+     * @param house 房屋
+     * @return
+     */
+    int updateHouse(House house);
 }

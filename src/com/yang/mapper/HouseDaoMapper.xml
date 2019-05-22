@@ -123,9 +123,25 @@
 		#{publisherPhone},#{publishDate})
 	</insert>
 
+	<update id="updateHouse" parameterType="com.yang.entity.House">
+		UPDATE house SET
+		 house_info=#{houseInfo}, house_price=#{housePrice},
+		 house_type=#{houseType},house_area=#{houseArea},
+		 house_towards=#{houseTowards},house_floor=#{houseFloor},
+		 house_decorationtype=#{houseDecorationtype},house_address=#{houseAddress},
+		 type=#{type},house_details=#{houseDetails},
+		 introduced=#{introduced},location=#{houseLocation}
+		WHERE
+		house_number=#{houseNumber}
+	</update>
+
 	<insert id="bindBrokerHouse">
 		INSERT INTO broker_house(broker_accout, house_number) VALUES (#{arg0},#{arg1})
 	</insert>
+
+	<delete id="deleteImage">
+		DELETE from img WHERE img_path=#{arg0} AND house_number=#{arg1}
+	</delete>
 
 </mapper>
 

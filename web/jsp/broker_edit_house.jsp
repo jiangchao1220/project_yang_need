@@ -20,10 +20,12 @@
             if (loginUser == "") {
                 alert("请登录!");
                 window.location = "<%=basePath%>/login.jsp";
+                return;
             }
             if (isBorker != "borker") {
                 alert("您无权修改房屋!");
                 window.location = "<%=basePath%>/index.jsp";
+                return;
             }
             $("#alogin").append("<a href='<%=basePath%>/user.jsp'>" + loginUser + "</a>");
             $("#my_account").append(loginUser);
@@ -50,7 +52,6 @@
                 success: function (data) {
                     loadImages(data);
                     loadHouseInfo(data);
-
                 }, error: function () {
                     alert("ajax error!");
                 }
@@ -92,7 +93,32 @@
         }
 
         function delete_img(obj) {
-            alert(obj.name);
+            var houseNumber = "${brokerDetailHouseNumber}";
+            var imageName = {
+                "imageName": obj.name,
+                "houseNumber":houseNumber,
+            };
+            var msg = "是否删除图片?"
+            var result = confirm(msg);
+            if (result) {
+                $.ajax({
+                    type: "GET",
+                    url: "..//house/deleteImage.do",
+                    contentType: "application/json;charset=UTF-8",
+                    data: imageName,
+                    dataType: "JSON",
+                    success: function (data) {
+                        if (data == "success") {
+                            var father = obj.parentNode.parentNode;
+                            father.remove();
+                        } else {
+                            alert("删除失败,请刷新页面重试.");
+                        }
+                    }, error: function () {
+                        alert("ajax error!");
+                    }
+                });
+            }
         }
 
         function loginout() {
@@ -170,6 +196,7 @@
 
             var house = {
                 "type": type,
+                "houseNumber": "${brokerDetailHouseNumber}",
                 "houseInfo": house_info,
                 "housePrice": house_price,
                 "houseArea": house_area,
@@ -192,20 +219,33 @@
                 alert("请上传房屋图片");
                 return;
             }
+
+            if (formdata.get("images") == null) {
+                //只上传房屋信息
+                updateHouse(house);
+            } else {
+                //先上传图片再上传房屋信息
+                uploadImgAndInfo(formdata, house);
+            }
+
+
+        }
+
+        function uploadImgAndInfo(formdata, house) {
             $.ajax({
                 type: "POST",
-                url: "..//house/addHouseByFromData.do",
+                url: "..//house/updateHouseByFromData.do",
                 cache: false,
                 data: formdata,
                 dataType:"JSON",
                 processData: false,
                 contentType: false,
                 success: function (data) {
-                    if (data.state == "fail") {
+                    if (data == "fail") {
                         alert("添加失败,请稍后重试!");
-                    } else if (data.state == "success") {
+                    } else if (data == "success") {
                         //添加house信息
-                        addHouse(data,house);
+                        updateHouse(house);
                     }
                 }, error: function () {
                     alert("ajax error!");
@@ -213,18 +253,17 @@
             });
         }
 
-        function addHouse(datastate,house) {
-            house.houseNumber = datastate.houseNumber;
+        function updateHouse(house) {
             $.ajax({
                 type: "POST",
-                url: "..//house/addHouse.do",
+                url: "..//house/updateHouse.do",
                 contentType: "application/x-www-form-urlencoded;charset=UTF-8",
                 data: house,
                 dataType: "JSON",
                 success: function (data) {
                     if (data == "success") {
-                        alert("添加成功!");
-                        window.location = "..//house/brokerProinfo.do?houseNumber=" + datastate.houseNumber;
+                        alert("更新成功!");
+                        window.location = "..//house/brokerProinfo.do?houseNumber=" + house.houseNumber;
                     } else {
                         //TODO 删除已上传的图片
 //                        deleteUploadImg(datastate);
@@ -250,6 +289,12 @@
         }
 
         function checkFile(formdata) {
+            //检查是否已经存在图片
+            var existscount = document.getElementsByName("existsImg").length;
+            if (existscount != 0) {
+                return true;
+            }
+
             //校验是否有图片上传
             if (formdata.get("images") == "undefined") {
                 return false;

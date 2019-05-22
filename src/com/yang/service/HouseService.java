@@ -107,11 +107,37 @@ public interface HouseService {
     FileUploadState saveImages(MultipartFile[] uploadFiles, String account);
 
     /**
+     * 修改房屋信息页面保存房屋图片
+     *
+     * @param uploadFiles 房屋图片
+     * @param houseNum    房屋编号
+     * @return 状态
+     */
+    String saveImagesByHouseNum(MultipartFile[] uploadFiles, int houseNum);
+
+    /**
      * 删除房屋
      *
-     * @param account 账号
+     * @param account     账号
      * @param houseNumber 编号
      * @return 状态
      */
     String deleteHouse(String account, int houseNumber);
+
+    /**
+     * 修改房屋
+     *
+     * @param house 房屋
+     * @return 状态
+     */
+    String updateHouse(House house);
+
+    /**
+     * 修改房屋页面删除房屋图片
+     *
+     * @param imageName   图片文件路径
+     * @param houseNumber 房屋编号
+     * @return
+     */
+    String deleteImage(String imageName, int houseNumber);
 }

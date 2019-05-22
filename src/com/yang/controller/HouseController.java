@@ -266,6 +266,13 @@ public class HouseController {
         return JsonUtil.toJSon(houseService.insertHouse(house, account));
     }
 
+    /**
+     * 新增房屋页面添加房屋图片信息
+     *
+     * @param session     session
+     * @param uploadFiles 文件数组
+     * @return
+     */
     @RequestMapping(value = "/addHouseByFromData", method = RequestMethod.POST)
     @ResponseBody
     public String addHouseByFromData(
@@ -274,9 +281,60 @@ public class HouseController {
         return JsonUtil.toJSon(houseService.saveImages(uploadFiles, String.valueOf(session.getAttribute("loginUser"))));
     }
 
+    /**
+     * 删除房屋
+     *
+     * @param account     用户名
+     * @param houseNumber 房屋编号
+     * @return
+     */
     @RequestMapping(value = "/deleteHouse", method = RequestMethod.GET)
     @ResponseBody
     public String deleteHouse(String account, int houseNumber) {
         return JsonUtil.toJSon(houseService.deleteHouse(account, houseNumber));
+    }
+
+    /**
+     * 修改房屋
+     *
+     * @param house     房屋
+     * @return
+     */
+    @RequestMapping(value = "/updateHouse", method = RequestMethod.POST)
+    @ResponseBody
+    public String updateHouse(House house) {
+        System.out.println("修改房屋:");
+        System.out.println(JsonUtil.toJSon(house));
+        return JsonUtil.toJSon(houseService.updateHouse(house));
+    }
+
+    /**
+     * 修改房屋图片
+     *
+     * @param uploadFiles     房屋图片
+     * @return
+     */
+    @RequestMapping(value = "/updateHouseByFromData", method = RequestMethod.POST)
+    @ResponseBody
+    public String updateHouseByFromData(
+            HttpSession session,
+            @RequestParam(value = "images", required = false) MultipartFile[] uploadFiles) {
+        String houseNumber = String.valueOf(session.getAttribute("brokerDetailHouseNumber"));
+        return JsonUtil.toJSon(houseService.saveImagesByHouseNum(
+                    uploadFiles,
+                    Integer.parseInt(houseNumber)));
+    }
+
+    /**
+     * 修改房屋页面删除房屋图片
+     *
+     * @param imageName   图片文件路径
+     * @param houseNumber 房屋编号
+     * @return
+     */
+    @RequestMapping(value = "/deleteImage", method = RequestMethod.GET)
+    @ResponseBody
+    public String deleteImage(String imageName, int houseNumber) {
+        return JsonUtil.toJSon(houseService.deleteImage(imageName, houseNumber));
     }
 }
