@@ -14,6 +14,34 @@
             //导航定位
             $(".nav li:eq(6)").addClass("navCur");
         })
+        function fromClick() {
+            var username = $("#agent").val();
+            var password = $("#password").val();
+            var loginMsg = {
+                "username": username,
+                "password": password,
+            };
+            $.ajax({
+                type: "POST",
+                url: "login.do",
+                contentType: "application/x-www-form-urlencoded;charset=UTF-8",
+                data: loginMsg,
+                dataType: "JSON",
+                success: function (data) {
+                    switch (data) {
+                        case "failed":
+                            $("#msg").empty();
+                            $("#msg").append("<span class='red'>账号或密码错误</span>");
+                            break;
+                        case "successed":
+                            window.location = "index.jsp";
+                            break;
+                    }
+                }, error: function () {
+                    alert("ajax error!");
+                }
+            });
+        }
     </script>
 </head>
 
@@ -40,7 +68,7 @@
 <div class="content">
     <div class="width1190">
         <div class="reg-logo">
-            <form id="signupForm" method="post" action="login.do" class="zcform">
+            <form id="signupForm" method="post" action="#" class="zcform">
                 <p class="clearfix">
                     <label class="one" for="agent">用户名：</label>
                     <input id="agent" name="username" type="text" class="required" value placeholder="请输入您的用户名"/>
@@ -50,15 +78,21 @@
                     <input id="password" name="password" type="password" class="{required:true,rangelength:[8,20],}"
                            value placeholder="请输入密码"/>
                 </p>
+                <p id="msg" align="center"></p>
                 <!--<p class="clearfix agreement">
                     <input type="checkbox" />
                     <b class="left">已阅读并同意<a href="#">《用户协议》</a></b>
                 </p>-->
-                <p class="clearfix"><input class="submit" type="submit" value="立即登录"/></p>
+                <p class="clearfix"><input class="submit" type="button" onclick="fromClick()" value="立即登录"/></p>
             </form>
             <div class="reg-logo-right">
-                <h3>如果您没有账号，请</h3>
+                <h3>普通用户注册通道:</h3>
                 <a href="reg.jsp" class="logo-a">立即注册</a>
+            </div><!--reg-logo-right/-->
+            <p>&nbsp;</p>
+            <div class="reg-logo-right">
+                <h3>经纪人注册通道:</h3>
+                <a href="broker_reg.jsp" class="logo-a">立即注册</a>
             </div><!--reg-logo-right/-->
             <div class="clears"></div>
         </div><!--reg-logo/-->

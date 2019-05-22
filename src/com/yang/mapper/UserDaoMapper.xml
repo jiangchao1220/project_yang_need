@@ -24,6 +24,20 @@
 		INSERT INTO `user`(name, password) VALUES (#{name}, #{password})
 	</insert>
 
+	<insert id="insertUserInfo" parameterType="com.yang.entity.UserInfo">
+		INSERT INTO `user_info`(username,phone,name,age,qq,sex, signtext)
+		VALUES (#{username},#{phone},#{name},#{age},#{qq},#{sex}, #{signtext})
+	</insert>
+
+	<update id="updateUserInfo" parameterType="com.yang.entity.UserInfo">
+		UPDATE user_info SET phone=#{phone},name=#{name},
+		 age=#{age},qq=#{qq},sex=#{sex},signtext=#{signtext}WHERE username=#{username}
+	</update>
+
+	<select id="findUserInfoByUaseName" resultType="userInfo">
+		SELECT * FROM `user_info` WHERE username=#{arg0}
+	</select>
+
 	<!--<delete id="delPersonById" parameterType="int">-->
 		<!--DELETE from person WHERE pid=#{pid}-->
 	<!--</delete>-->

@@ -6,17 +6,22 @@ import com.yang.entity.IndexHouse;
 import com.yang.model.HouseType;
 import com.yang.service.impl.HouseServiceImpl;
 import com.yang.util.JsonUtil;
+import com.yang.util.SortUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-import static com.yang.model.HouseType.*;
+import static com.yang.model.HouseType.findByValue;
 
 /**
  * Created by jiang on 2019/4/18.
@@ -58,6 +63,8 @@ public class HouseController {
     }
 
     /**
+     * 跳转房屋详情页
+     *
      * @param houseNumber 房屋编号
      * @return 房屋详情页
      * @throws IOException
@@ -65,9 +72,22 @@ public class HouseController {
     @RequestMapping(value = "/proinfo", method = RequestMethod.GET)
     public String turnHouseDetailsPage(int houseNumber, HttpSession httpSession) throws IOException {
         System.out.println(houseNumber);
-        //TODO 把house Number放到session中,jsp取出来调用查询详情的controller
         httpSession.setAttribute("houseNumber", houseNumber);
         return "proinfo";
+    }
+
+    /**
+     * 跳转经纪人房屋详情页
+     *
+     * @param houseNumber 房屋编号
+     * @return 房屋详情页
+     * @throws IOException
+     */
+    @RequestMapping(value = "/brokerProinfo", method = RequestMethod.GET)
+    public String turnBrokerHouseDetailsPage(int houseNumber, HttpSession httpSession) throws IOException {
+        System.out.println(houseNumber);
+        httpSession.setAttribute("brokerDetailHouseNumber", houseNumber);
+        return "broker_proinfo";
     }
 
     /**
@@ -107,13 +127,7 @@ public class HouseController {
             default:
                 houseList = new ArrayList<>();
         }
-        Collections.sort(houseList, new Comparator<HouseVO>() {
-            @Override
-            public int compare(HouseVO o1, HouseVO o2) {
-                return (java.text.Collator.getInstance(Locale.CHINA)).compare(o2.getHouse().getPublishDate(),o1.getHouse().getPublishDate());
-            }
-        });
-        return JsonUtil.toJSon(houseList);
+        return JsonUtil.toJSon(SortUtil.sortByTime(houseList));
     }
 
     /**
@@ -177,6 +191,40 @@ public class HouseController {
     }
 
     /**
+     * 查询用户关注的房源
+     *
+     * @param username    用户名
+     * @return 房屋信息列表
+     */
+    @RequestMapping(value = "/findConcernHouse", method = RequestMethod.GET)
+    @ResponseBody
+    public String findConcernHouse(String username) {
+        System.out.println("关注房源:"+ username);
+        if (username == null){
+            return JsonUtil.toJSon("notlogin");
+        }
+        List<HouseVO> houseVOList = houseService.findConcernHouses(username);
+        return JsonUtil.toJSon(houseVOList);
+    }
+
+    /**
+     * 查询经纪人发布的房源
+     *
+     * @param account    账户名
+     * @return 房屋信息列表
+     */
+    @RequestMapping(value = "/findPublishHouse", method = RequestMethod.GET)
+    @ResponseBody
+    public String findPublishHouse(String account) {
+        System.out.println("发布房源:"+ account);
+        if (account == null){
+            return JsonUtil.toJSon("notlogin");
+        }
+        List<HouseVO> houseVOList = houseService.findPublishHouse(account);
+        return JsonUtil.toJSon(houseVOList);
+    }
+
+    /**
      * 查询是否已关注房源
      *
      * @param houseNumber 房屋编号
@@ -188,5 +236,105 @@ public class HouseController {
     public String checkConcern(int houseNumber, String username) {
         String state = houseService.checkConcern(houseNumber, username);
         return JsonUtil.toJSon(state);
+    }
+
+    /**
+     * 个人中心取消关注房源
+     *
+     * @param houseNumber 房屋编号
+     * @param username    用户名
+     * @return 状态
+     */
+    @RequestMapping(value = "/cancelConcern", method = RequestMethod.GET)
+    @ResponseBody
+    public String cancelConcern(int houseNumber, String username) {
+        return JsonUtil.toJSon(houseService.cancelConcern(houseNumber, username));
+    }
+
+    /**
+     * 经纪人发布房屋
+     *
+     * @param session session
+     * @param house   房屋
+     * @return 状态
+     */
+    @RequestMapping(value = "/addHouse", method = RequestMethod.POST)
+    @ResponseBody
+    public String addHouse(HttpSession session, House house) {
+        String account = String.valueOf(session.getAttribute("loginUser"));
+        System.out.println(JsonUtil.toJSon(house));
+        return JsonUtil.toJSon(houseService.insertHouse(house, account));
+    }
+
+    /**
+     * 新增房屋页面添加房屋图片信息
+     *
+     * @param session     session
+     * @param uploadFiles 文件数组
+     * @return
+     */
+    @RequestMapping(value = "/addHouseByFromData", method = RequestMethod.POST)
+    @ResponseBody
+    public String addHouseByFromData(
+            HttpSession session,
+            @RequestParam(value = "images", required = false) MultipartFile[] uploadFiles) {
+        return JsonUtil.toJSon(houseService.saveImages(uploadFiles, String.valueOf(session.getAttribute("loginUser"))));
+    }
+
+    /**
+     * 删除房屋
+     *
+     * @param account     用户名
+     * @param houseNumber 房屋编号
+     * @return
+     */
+    @RequestMapping(value = "/deleteHouse", method = RequestMethod.GET)
+    @ResponseBody
+    public String deleteHouse(String account, int houseNumber) {
+        return JsonUtil.toJSon(houseService.deleteHouse(account, houseNumber));
+    }
+
+    /**
+     * 修改房屋
+     *
+     * @param house     房屋
+     * @return
+     */
+    @RequestMapping(value = "/updateHouse", method = RequestMethod.POST)
+    @ResponseBody
+    public String updateHouse(House house) {
+        System.out.println("修改房屋:");
+        System.out.println(JsonUtil.toJSon(house));
+        return JsonUtil.toJSon(houseService.updateHouse(house));
+    }
+
+    /**
+     * 修改房屋图片
+     *
+     * @param uploadFiles     房屋图片
+     * @return
+     */
+    @RequestMapping(value = "/updateHouseByFromData", method = RequestMethod.POST)
+    @ResponseBody
+    public String updateHouseByFromData(
+            HttpSession session,
+            @RequestParam(value = "images", required = false) MultipartFile[] uploadFiles) {
+        String houseNumber = String.valueOf(session.getAttribute("brokerDetailHouseNumber"));
+        return JsonUtil.toJSon(houseService.saveImagesByHouseNum(
+                    uploadFiles,
+                    Integer.parseInt(houseNumber)));
+    }
+
+    /**
+     * 修改房屋页面删除房屋图片
+     *
+     * @param imageName   图片文件路径
+     * @param houseNumber 房屋编号
+     * @return
+     */
+    @RequestMapping(value = "/deleteImage", method = RequestMethod.GET)
+    @ResponseBody
+    public String deleteImage(String imageName, int houseNumber) {
+        return JsonUtil.toJSon(houseService.deleteImage(imageName, houseNumber));
     }
 }

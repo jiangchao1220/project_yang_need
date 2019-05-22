@@ -1,6 +1,8 @@
 package com.yang.controller;
 
 import com.yang.entity.User;
+import com.yang.entity.UserInfo;
+import com.yang.service.BrokerService;
 import com.yang.service.UserService;
 import com.yang.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 /**
  * Created by jiang on 2019/4/14.
@@ -22,32 +25,42 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private BrokerService brokerService;
+
     /**
      * 登录Controller
      *
      * @param httpSession session
-     * @param response    response
+     * @param request     request
      * @param username    用户名
      * @param password    密码
      * @return 跳转页面
      * @throws IOException IO异常
      */
     @RequestMapping(value = "/**/login", method = RequestMethod.POST)
+    @ResponseBody
     public String login(
             HttpSession httpSession,
-            HttpServletResponse response,
+            HttpServletRequest request,
             String username,
             String password) throws IOException {
         User user = new User();
+        String username2 = request.getParameter("username");
+        String password2 = request.getParameter("password");
         user.setName(username);
         user.setPassword(password);
         User u = userService.loginUser(user);
         System.out.println("jinlai la");
         if (null == u) {
-            response.sendRedirect("login.jsp");
+            //登陆页面兼容经纪人登陆
+            String brokerLoginMsg = brokerService.borkerLogin(httpSession, username, password);
+            if ("failed".equals(brokerLoginMsg)) {
+                return JsonUtil.toJSon("failed");
+            }
         }
-        httpSession.setAttribute("loginUser", u.getName());
-        return "index";
+        httpSession.setAttribute("loginUser", username);
+        return JsonUtil.toJSon("successed");
     }
 
     /**
@@ -110,5 +123,36 @@ public class UserController {
             httpSession.removeAttribute("loginUser");
         }
         return JsonUtil.toJSon(isSuccess);
+    }
+
+    /**
+     * 修改用户资料信息
+     *
+     * @param userInfo userInfo
+     * @return isSuccess
+     */
+    @RequestMapping(value = "/**/userinfo", method = RequestMethod.GET, produces = "text/html;charset=UTF-8;")
+    @ResponseBody
+    public String addUserInfo(UserInfo userInfo) {
+        String msg;
+        try {
+            msg = userService.insertUserInfo(userInfo);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            msg = "decode error";
+        }
+        return JsonUtil.toJSon(msg);
+    }
+
+    /**
+     * 修改用户资料信息
+     *
+     * @param username username
+     * @return userinfo
+     */
+    @RequestMapping(value = "/**/loadUserInfo", method = RequestMethod.GET, produces = "text/html;charset=UTF-8;")
+    @ResponseBody
+    public String findUserInfo(String username) {
+        return JsonUtil.toJSon(userService.findUserInfo(username));
     }
 }

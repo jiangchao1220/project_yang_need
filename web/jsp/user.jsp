@@ -13,13 +13,123 @@
         $(function () {
             //导航定位
             $(".nav li:eq(6)").addClass("navCur");
-            var loginUser = <%=session.getAttribute("loginUser") %>;
-            if (loginUser != null) {
+            var loginUser = "${loginUser}";
+            if (loginUser != "") {
+                var isBorker = "${isBorker}";
+                if (isBorker == "borker") {
+                    window.location = "broker_user.jsp";
+                }
+
                 $("#alogin").append("<a href='user.jsp'>" + loginUser + "</a>");
+                $("#phone").empty();
+                $("#phone").text(loginUser);
+                //加载个人信息
+                loadUserInfo(loginUser);
             } else {
                 $("#alogin").append("<a href='login.jsp'>登录</a>");
             }
         })
+
+        function loadUserInfo(username) {
+            var userInfo = {
+                "username": username,
+            };
+            $.ajax({
+                type: "GET",
+                url: "loadUserInfo.do",
+                contentType: "application/json;charset=UTF-8",
+                data: userInfo,
+                dataType: "JSON",
+                success: function (data) {
+                    if (data == null) {
+                        return;
+                    }
+                    switch (data.sex) {
+                        case "女":
+                            console.log("m")
+                            $("#rbSex1").prop("checked", true);
+                            break;
+                        case "男":
+                            console.log("f")
+                            $("#rbSex2").prop("checked", true);
+                            break;
+                        case "保密":
+                            console.log("s")
+                            $("#rbSex3").prop("checked", true);
+                            break;
+                    }
+                    $("#title").val(data.name);
+                    $("#age").val(data.age);
+                    $("#qq").val(data.qq);
+                    $("#sign").val(data.signtext);
+                }, error: function () {
+                    alert("ajax error!");
+                }
+            });
+        }
+
+        function loginout() {
+            var msg = "退出登录!"
+            var result = confirm(msg);
+            if (result) {
+                $.ajax({
+                    type: "GET",
+                    url: "..//loginOut/signOut.do",
+                    contentType: "application/json;charset=UTF-8",
+                    data: "",
+                    dataType: "JSON",
+                    success: function (data) {
+                        if (data == "signoutsuccess") {
+                            //退出成功
+                            alert("安全退出登录成功.");
+                            $("#alogin").empty();
+                            $("#alogin").append("<a href='login.jsp'>登录</a>");
+                            window.location = "user.jsp";
+                        } else {
+                            alert(data);
+                        }
+                    }, error: function () {
+                        alert("ajax error!");
+                    }
+                });
+            }
+        }
+
+        function mod_member() {
+            var username = "${loginUser}";
+            if (username == null) {
+                alert("请登陆后操作!");
+                return;
+            }
+            var phone = username;
+            var sex = $('input[name="sex"]:checked').val();
+            var name = $("#title").val();
+            var age = $("#age").val();
+            var qq = $("#qq").val();
+            var signtext = $("#sign").val();
+
+            var userInfo = {
+                "username": username,
+                "phone": phone,
+                "sex": encodeURI(sex),
+                "name": encodeURI(name),
+                "age": age,
+                "qq": qq,
+                "signtext": encodeURI(signtext),
+            };
+            $.ajax({
+                type: "GET",
+                url: "userinfo.do",
+                contentType: "application/json;charset=UTF-8",
+                data: userInfo,
+                dataType: "JSON",
+                success: function (data) {
+                    alert(data);
+                }, error: function () {
+                    alert("ajax error!");
+                }
+            });
+        }
     </script>
 </head>
 
@@ -59,14 +169,13 @@
                     <dt class="vipIcon1">我的邻居大妈</dt>
                     <dd>
                         <a href="user_guanzhu.jsp">关注房源</a>
-                        <a href="user_shenqing.jsp">申请社区自由经纪人</a>
-                        <a href="user_jingji.jsp">社区自由经纪人</a>
+                        <a href="javascript:;" onclick="loginout()">退出登录</a>
                     </dd>
                 </dl>
             </div><!--vipNav/-->
         </div><!--vip-left/-->
         <div class="vip-right">
-            <h3 class="vipright-title">修改头像</h3>
+            <%--<h3 class="vipright-title">修改头像</h3>
             <form action="#" method="get">
                 <dl class="vip-touxiang">
                     <dt><img src="images/tx.jpg" width="100" height="100"/></dt>
@@ -77,30 +186,32 @@
                     </dd>
                     <div class="clearfix"></div>
                 </dl><!--vip-touxiang/-->
-            </form>
+            </form>--%>
             <h3 class="vipright-title">修改资料</h3>
             <table class="grinfo">
                 <tbody>
                 <tr>
                     <th>手机号：</th>
-                    <td><strong>18521032517</strong>
-                        &nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:;"><span
-                                style="color:#888;cursor:pointer">(修改手机号)</span></a>
+                    <td><strong id="phone">未登录</strong>
+                        <%--&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:;"><span
+                                style="color:#888;cursor:pointer">(修改手机号)</span></a>--%>
                     </td>
                 </tr>
                 <tr>
                     <th><span class="red">*</span> 昵称：</th>
                     <td>
-                        <input class="inp inw" type="text" id="title" value="185****2517" maxlength="14">
+                        <input class="inp inw" type="text" id="title" value="" maxlength="14">
                     </td>
                 </tr>
                 <tr>
                     <th><span class="red">*</span> 性 &nbsp; &nbsp;别：</th>
                     <td>
-                        <input type="radio" value="2" id="rbSex1" name="sex">
+                        <input type="radio" value="女" id="rbSex1" name="sex">
                         <label for="rbSex1">女</label>
-                        <input type="radio" value="1" id="rbSex2" name="sex">
+                        <input type="radio" value="男" id="rbSex2" name="sex">
                         <label for="rbSex2">男</label>
+                        <input type="radio" value="保密" id="rbSex3" name="sex">
+                        <label for="rbSex2">保密</label>
                         <span id="Sex_Tip"></span>
                     </td>
                 </tr>
@@ -117,7 +228,7 @@
                     <th>&nbsp;Q &nbsp; &nbsp;Q：</th>
                     <td>
                         <input class="inp inw" type="text" maxlength="15" value="" id="qq"
-                               onkeyup="return ValidateNumber(this,value)">
+                               onkeyup="this.value=this.value.replace(/[^\d]/g,'')">
                     </td>
                 </tr>
 

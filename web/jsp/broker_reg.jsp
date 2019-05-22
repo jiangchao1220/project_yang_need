@@ -15,27 +15,28 @@
             $(".nav li:eq(6)").addClass("navCur");
             var loginUser = "${loginUser}";
             if (loginUser != "") {
-                $("#alogin").append("<a href='user.jsp'>" + loginUser +"</a>");
-            } else{
+                $("#alogin").append("<a href='user.jsp'>" + loginUser + "</a>");
+            } else {
                 $("#alogin").append("<a href='login.jsp'>登录</a>");
             }
         })
 
-        var usernameverify = /^(13[0-9]|14[0-9]|15[0-9]|166|17[0-9]|18[0-9]|19[8|9])\d{8}$/;
+        var phoneverify = /^(13[0-9]|14[0-9]|15[0-9]|166|17[0-9]|18[0-9]|19[8|9])\d{8}$/;
         var pwdverify = /^[a-zA-Z]\w{5,17}$/;
+        var realnameverify = /^[\u4e00-\u9fa5]{2,8}$/;
 
         function validate(date) {
             $("#apwd").empty();
             $("#aname").empty();
             $("#confirm_tips").empty();
             $("#null_tips").empty();
-            if(verifyusername(date) && verifypwd(date)){
-//                return valify(date);
-                if (valify(date) && existValify(date))
-                {
+            $("#name_tips").empty();
+            $("#phone_tips").empty();
+            if (verifyusername(date) && verifypwd(date)) {
+                if (valify(date) && existValify(date)) {
                     return true;
                 }
-                else{
+                else {
                     return false;
                 }
             }
@@ -45,21 +46,21 @@
         }
         function existValify(date) {
             var user_name = {
-                "username": date.username.value,
+                "accout": date.username.value,
             };
             var success_flag = false;
             $.ajax({
-                type: "GET",
-                url: "checkUserName.do",
-                async:false,
-                contentType: "application/json;charset=UTF-8",
+                type: "POST",
+                url: "checkBrokerAccout.do",
+                async: false,
+                contentType: "application/x-www-form-urlencoded;charset=UTF-8",
                 data: user_name,
                 dataType: "JSON",
                 success: function (data) {
-                    if (data == 0){
+                    if (data == "does not exist") {
                         success_flag = true;
                     }
-                    else if(data == 1){
+                    else if (data == "exist") {
                         $("#aname").append("账号已存在");
                     }
                 }, error: function () {
@@ -67,53 +68,103 @@
                 }
             });
             return success_flag;
-
         }
 
         function valify(date) {
-            if (date.username.value == "" || date.password.value == "" || date.confirm_password.value == ""){
-//                alert("账号密码不能为空,请重新输入!")
+            if (date.username.value == ""
+                || date.password.value == ""
+                || date.confirm_password.value == "") {
                 $("#null_tips").append("账号或密码为空!");
                 return false;
             }
-            else if (date.password.value != date.confirm_password.value){
-//                alert("密码不一致!"
+            else if (date.password.value != date.confirm_password.value) {
                 $("#confirm_tips").append("密码不一致");
                 return false;
+            } else if (date.context_phone.value == "") {
+                $("#phone_tips").append("手机号码不能为空");
+                return false;
             }
-//            else if(!verifyusername(date) || !verifypwd(date)){
-//                return false;
-//            }
-            else{
-//                alert("通过校验");
+            else if (!phoneverify.test(date.context_phone.value)) {
+                $("#phone_tips").append("手机号码格式不正确");
+                return false;
+            } else if (date.real_name.value == "") {
+                $("#name_tips").append("您需要输入姓名");
+                return false;
+            }
+            else if (!realnameverify.test(date.real_name.value)) {
+                $("#name_tips").append("姓名格式不正确");
+                return false;
+            }
+            else {
                 $("#apwd").empty();
                 $("#aname").empty();
                 $("#confirm_tips").empty();
                 $("#null_tips").empty();
+                $("#phone_tips").empty();
+                $("#name_tips").empty();
                 return true;
             }
         }
         function verifyusername(date) {
-            if (usernameverify.test(date.username.value)){
-//                alert("账号符合规则!");
+            if (date.username.value.length > 6) {
                 return true;
             }
             else {
-//                alert("账号不符合规则!");
-                $("#aname").append("请输入正确的手机号码");
+                $("#aname").append("用户名长度需大于6");
                 return false;
             }
         }
         function verifypwd(date) {
-            if (pwdverify.test(date.password.value)){
-//                alert("密码符合规则!");
+            if (pwdverify.test(date.password.value)) {
+//              密码符合规则!
                 return true;
             }
             else {
-//                alert("密码不符合规则!");
+//              密码不符合规则!
                 $("#apwd").append("请以字母开头，长度在6~18之间，只能包含字母、数字和下划线");
                 return false;
             }
+        }
+
+        function submitreg(data) {
+            var fromNode = data.parentNode.parentNode;
+            if (!validate(fromNode)) {
+                return;
+            }
+            var context_phone = $("#context_phone").val();
+            var sex = $('input[name="sex"]:checked').val();
+            var real_name = $("#real_name").val();
+            var accout = $("#agent").val();
+            var password = $("#password").val();
+
+            var userInfo = {
+                "accout": accout,
+                "context_phone": context_phone,
+                "sex": encodeURI(sex),
+                "real_name": encodeURI(real_name),
+                "password": password,
+            };
+            $.ajax({
+                type: "POST",
+                url: "brokerRegister.do",
+                contentType: "application/x-www-form-urlencoded;charset=UTF-8",
+                data: userInfo,
+                dataType: "JSON",
+                success: function (data) {
+                    if (data == "success") {
+                        var msg = "注册成功,现在登录?";
+                        var isTurnPage = confirm(msg);
+                        if (isTurnPage) {
+                            window.location = "login.jsp";
+                        }
+                    } else {
+                        alert("注册失败, 请稍后再试!")
+                    }
+                }, error: function () {
+                    alert("ajax error!");
+                }
+            });
+
         }
 
     </script>
@@ -144,15 +195,15 @@
 <div class="content">
     <div class="width1190">
         <div class="reg-logo">
-            <form id="signupForm" method="post" action="register.do" onsubmit="return validate(this)" class="zcform">
-                <h3>普通用户注册:</h3>
+            <%--<form id="signupForm" method="get" action="brokerRegister.do" onsubmit="return validate(this)" class="zcform">--%>
+            <form id="signupForm" method="get" action="brokerRegister.do" class="zcform">
+                <h3>经纪人注册:</h3>
                 <a id="null_tips"></a>
                 <p id="name" class="clearfix">
                     <label class="one" for="agent">用户名：</label>
                     <input id="agent" name="username" type="text" class="required" value placeholder="请输入您的用户名"/>
                 </p>
                 <a id="aname"></a>
-
                 <p id="pwd" class="clearfix">
                     <label class="one" for="password">登录密码：</label>
                     <input id="password" name="password" type="password" class="{required:true,rangelength:[8,20],}"
@@ -165,19 +216,32 @@
                            class="{required:true,equalTo:'#password'}" value placeholder="请再次输入密码"/>
                 </p>
                 <a id="confirm_tips"></a>
-                <!--<p class="clearfix agreement">
-                    <input type="checkbox" />
-                    <b class="left">已阅读并同意<a href="#">《用户协议》</a></b>
-                </p>-->
-                <p class="clearfix"><input class="submit" type="submit" value="立即注册"/></p>
+
+                <p class="clearfix" align="center">
+                    <label class="one" for="rbSex2">性 &nbsp; &nbsp;别：</label>
+                    <input type="radio" value="男" id="rbSex2" name="sex" checked="checked">
+                    <label for="rbSex2">男</label>
+                    <input type="radio" value="女" id="rbSex1" name="sex">
+                    <label for="rbSex1">女</label>
+                    <span id="Sex_Tip"></span>
+                </p>
+                <a id="name_tips"></a>
+                <p class="clearfix">
+                    <label class="one" for="real_name"><span class="red">*</span>姓 &nbsp; &nbsp;名：</label>
+                    <input class="inp inw" type="text" name="real_name" id="real_name" value="" maxlength="14">
+                </p>
+                <a id="phone_tips"></a>
+                <p class="clearfix">
+                    <label class="one" for="real_name"><span class="red">*</span>联系电话：</label>
+                    <input class="inp inw" type="text" name="context_phone" id="context_phone" value=""
+                           onkeyup="this.value=this.value.replace(/[^\d]/g,'')">
+                </p>
+
+                <p class="clearfix"><input class="submit" type="button" onclick="submitreg(this)" value="立即注册"/></p>
             </form>
             <div class="reg-logo-right">
                 <h3>如果您已有账号，请</h3>
                 <a href="login.jsp" class="logo-a">立即登录</a>
-            </div><!--reg-logo-right/-->
-            <div class="reg-logo-right">
-                <h3>注册成为经纪人:</h3>
-                <a href="broker_reg.jsp" class="logo-a">去注册</a>
             </div><!--reg-logo-right/-->
             <div class="clears"></div>
         </div><!--reg-logo/-->
@@ -205,40 +269,5 @@
 <div class="copy">Copyright@ 2015 邻居大妈 版权所有 沪ICP备1234567号-0&nbsp;&nbsp;&nbsp;&nbsp;
 </div>
 <div class="bg100"></div>
-<div class="zhidinggoufang">
-    <h2>指定购房 <span class="close">X</span></h2>
-    <form action="#" method="get">
-        <div class="zhiding-list">
-            <label>选择区域：</label>
-            <select>
-                <option>智慧园</option>
-                <option>立民村</option>
-                <option>塘口村</option>
-                <option>勤劳村</option>
-                <option>芦胜村</option>
-                <option>知新村</option>
-            </select>
-        </div>
-        <div class="zhiding-list">
-            <label>方式：</label>
-            <select>
-                <option>租房</option>
-                <option>新房</option>
-                <option>二手房</option>
-            </select>
-        </div>
-        <div class="zhiding-list">
-            <label>联系方式：</label>
-            <input type="text"/>
-        </div>
-        <div class="zhidingsub"><input type="submit" value="提交"/></div>
-    </form>
-    <div class="zhidingtext">
-        <h3>指定购房注意事宜：</h3>
-        <p>1、请详细输入您所需要购买的房源信息(精确到小区)</p>
-        <p>2、制定购房申请提交后，客服中心会在24小时之内与您取得联系</p>
-        <p>3、如有任何疑问，请随时拨打我们的电话：400-000-0000</p>
-    </div><!--zhidingtext/-->
-</div><!--zhidinggoufang/-->
 </body>
 </html>

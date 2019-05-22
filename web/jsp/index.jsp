@@ -13,19 +13,18 @@
         $(function () {
             //导航定位
             $(".nav li:eq(0)").addClass("navCur");
-            var loginUser = <%=session.getAttribute("loginUser") %>;
-            if (loginUser != null) {
-                $("#alogin").append("<a href='user.jsp'>" + loginUser +"</a>");
-            } else{
+            <%--var loginUser = <%=session.getAttribute("loginUser") %>;--%>
+            var loginUser = "${loginUser}";
+            if (loginUser != "") {
+                $("#from1").empty();
+                $("#from1").append("<h1 align='cnter'>您已经登陆</h1>" +
+                    "<div class='zhidingsub'> " +
+                    "<input type='button' onclick='loginout()' value='退出登录'/> " +
+                    "</div>");
+                $("#alogin").append("<a href='user.jsp'>" + loginUser + "</a>");
+            } else {
                 $("#alogin").append("<a href='login.jsp'>登录</a>");
             }
-//            //测试json数据
-//            var adata = {
-//                "id": "1",
-//                "name": "jiangchao",
-//                "password": "1234"
-//            }
-//            var data = JSON.stringify(adata);
 
             //加载租房房源信息
             $.ajax({
@@ -44,9 +43,9 @@
                     for (var i = 0; maxLength > i; i++) {
                         $("#rent_house").append(
                             "<dl>"
-                            + "<dt><a href='../house/proinfo.do?houseNumber="+ data[i].houseNumber +"'><img src='" + data[i].images[0] + "' width='286' height='188'/></a></dt>"
+                            + "<dt><a href='../house/proinfo.do?houseNumber=" + data[i].houseNumber + "'><img src='" + data[i].images[0] + "' width='286' height='188'/></a></dt>"
                             + "<dd>"
-                            + "<h3><a href='../house/proinfo.do?houseNumber="+ data[i].houseNumber +"'></a>" + data[i].houseInfo + "</h3>"
+                            + "<h3><a href='../house/proinfo.do?houseNumber=" + data[i].houseNumber + "'></a>" + data[i].houseInfo + "</h3>"
                             + "<div class='hui'>" + data[i].houseType + " " + data[i].decorationType + "</div>"
                             + "</dd>"
                             + "</dl>"
@@ -75,9 +74,9 @@
                     for (var i = 0; maxLength > i; i++) {
                         $("#new_house").append(
                             "<dl>"
-                            + "<dt><a href='../house/proinfo.do?houseNumber="+ data[i].houseNumber +"'><img src='" + data[i].images[0] + "' width='286' height='188'/></a></dt>"
+                            + "<dt><a href='../house/proinfo.do?houseNumber=" + data[i].houseNumber + "'><img src='" + data[i].images[0] + "' width='286' height='188'/></a></dt>"
                             + "<dd>"
-                            + "<h3><a href='../house/proinfo.do?houseNumber="+ data[i].houseNumber +"'></a>" + data[i].houseInfo + "</h3>"
+                            + "<h3><a href='../house/proinfo.do?houseNumber=" + data[i].houseNumber + "'></a>" + data[i].houseInfo + "</h3>"
                             + "<div class='hui'>" + data[i].houseType + " " + data[i].decorationType + "</div>"
                             + "</dd>"
                             + "</dl>"
@@ -106,21 +105,19 @@
                     for (var i = 0; maxLength > i; i++) {
                         if (i == 0) {
                             $("#secondhand_house_list1").append(
-//                                "<div class='in-er-left'>"
-                                "<a href='../house/proinfo.do?houseNumber="+ data[i].houseNumber +"'>"
+                                "<a href='../house/proinfo.do?houseNumber=" + data[i].houseNumber + "'>"
                                 + "<img src='" + data[i].images[0] + "' width='380' height='285'/>"
                                 + "</a>"
                                 + "<div class='in-er-left-text'><strong class='fl'>" + data[i].houseInfo
                                 + "</strong><strong class='fr alignRight'>¥" + data[i].housePrice + "万元</strong></div>"
-//                                + "</div>"
                             );
                         }
                         else {
                             $("#secondhand_house_list2").append(
                                 "<dl>"
-                                + "<dt><a href='../house/proinfo.do?houseNumber="+ data[i].houseNumber +"'><img src='" + data[i].images[0] + "' width='150' height='115'/></a></dt>"
+                                + "<dt><a href='../house/proinfo.do?houseNumber=" + data[i].houseNumber + "'><img src='" + data[i].images[0] + "' width='150' height='115'/></a></dt>"
                                 + "<dd>"
-                                + "<h3><a href='../house/proinfo.do?houseNumber="+ data[i].houseNumber +"'>" + data[i].houseInfo + "</a></h3>"
+                                + "<h3><a href='../house/proinfo.do?houseNumber=" + data[i].houseNumber + "'>" + data[i].houseInfo + "</a></h3>"
                                 + "<div class='in-er-right-text'>" + data[i].houseDetails + "</div>"
                                 + "<div class='price'>¥<strong>" + data[i].housePrice + "万元</strong></div>"
                                 + "</dd>"
@@ -130,14 +127,71 @@
                         }
                     }
                     $("#secondhand_house_list2").append("<div class='clears'></div>");
-//                    $("#secondhand_house").append("<div class='clears'></div>");
                 }, error: function () {
                     alert("ajax error!");
                 }
             });
-
-
         })
+
+        function broker_submit() {
+            var username = $("#broker_accout").val();
+            var password = $("#broker_passwprd").val();
+            var loginMsg = {
+                "username": username,
+                "password": password,
+            };
+            $.ajax({
+                type: "POST",
+                url: "brokerLogin.do",
+                contentType: "application/x-www-form-urlencoded;charset=UTF-8",
+                data: loginMsg,
+                dataType: "JSON",
+                success: function (data) {
+                    switch (data) {
+                        case "failed":
+                            $("#msg").empty();
+                            $("#msg").append("<span class='red'>账号或密码错误</span>");
+                            break;
+                        case "successed":
+                            window.location = "index.jsp";//经纪人查询自己添加的房屋界面
+                            break;
+                    }
+                }, error: function () {
+                    alert("请求失败!");
+                }
+            });
+        }
+
+        function borker_reg() {
+            window.location = "broker_reg.jsp";
+        }
+
+        function loginout() {
+            var msg = "退出登录!"
+            var result = confirm(msg);
+            if (result) {
+                $.ajax({
+                    type: "GET",
+                    url: "..//loginOut/signOut.do",
+                    contentType: "application/json;charset=UTF-8",
+                    data: "",
+                    dataType: "JSON",
+                    success: function (data) {
+                        if (data == "signoutsuccess") {
+                            //退出成功
+                            alert("安全退出登录成功.");
+                            $("#alogin").empty();
+                            $("#alogin").append("<a href='login.jsp'>登录</a>");
+                            window.location = "index.jsp";
+                        } else {
+                            alert("您还未登录!");
+                        }
+                    }, error: function () {
+                        alert("ajax error!");
+                    }
+                });
+            }
+        }
     </script>
 </head>
 
@@ -210,9 +264,7 @@
             <li><a href="pro_zu.jsp">租房</a></li>
             <li><a href="pro_xin.jsp">新房</a></li>
             <li><a href="pro_er.jsp">二手房</a></li>
-            <li class="zhiding"><a href="javascript:;">指定购房</a></li>
-            <li><a href="user_jingji.jsp">申请自由经纪人</a></li>
-            <li><a href="about.html">关于我们</a></li>
+            <li class="zhiding"><a href="javascript:;">经纪人</a></li>
             <div class="clears"></div>
         </ul><!--nav/-->
         <div class="clears"></div>
@@ -287,9 +339,9 @@
 </div>
 <div class="bg100"></div>
 <div class="zhidinggoufang">
-    <h2>指定购房 <span class="close">X</span></h2>
-    <form action="#" method="get">
-        <div class="zhiding-list">
+    <h2>经纪人登录 <span class="close">X</span></h2>
+    <form action="#" method="get" id="from1">
+        <%--<div class="zhiding-list">
             <label>选择区域：</label>
             <select>
                 <option>武侯区</option>
@@ -306,17 +358,25 @@
                 <option>新房</option>
                 <option>二手房</option>
             </select>
+        </div>--%>
+        <div class="zhiding-list">
+            <label>账号：</label>
+            <input type="text" id="broker_accout"/>
         </div>
         <div class="zhiding-list">
-            <label>联系方式：</label>
-            <input type="text"/>
+            <label>密码：</label>
+            <input type="password" id="broker_passwprd"/>
         </div>
-        <div class="zhidingsub"><input type="submit" value="提交"/></div>
+        <p id="msg" align="center"></p>
+        <div class="zhidingsub">
+            <input type="button" onclick="broker_submit()" value="提交"/>
+            <input type="button" onclick="borker_reg()" value="注册"/>
+        </div>
     </form>
     <div class="zhidingtext">
-        <h3>指定购房注意事宜：</h3>
-        <p>1、请详细输入您所需要购买的房源信息(精确到小区)</p>
-        <p>2、制定购房申请提交后，客服中心会在24小时之内与您取得联系</p>
+        <h3>经纪人登录注意事宜：</h3>
+        <p>1、普通用户无权登录</p>
+        <p>2、经纪人不得发布任何虚假房源信息</p>
         <p>3、如有任何疑问，请随时拨打我们的电话：400-000-0000</p>
     </div><!--zhidingtext/-->
 </div><!--zhidinggoufang/-->

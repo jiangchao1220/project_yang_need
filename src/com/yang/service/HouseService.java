@@ -3,7 +3,9 @@ package com.yang.service;
 import com.yang.entity.House;
 import com.yang.entity.HouseVO;
 import com.yang.entity.IndexHouse;
+import com.yang.model.FileUploadState;
 import com.yang.model.HouseType;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -53,6 +55,22 @@ public interface HouseService {
     String concernHouse(int houseNumber, String username);
 
     /**
+     * 查询用户关注的房源
+     *
+     * @param username    用户名
+     * @return 房屋信息列表
+     */
+    List<HouseVO> findConcernHouses(String username);
+
+    /**
+     * 查询用户发布的房源
+     *
+     * @param account    用户名
+     * @return 房屋信息列表
+     */
+    List<HouseVO> findPublishHouse(String account);
+
+    /**
      * 查询是否已关注房源
      *
      * @param houseNumber 房屋编号
@@ -61,5 +79,65 @@ public interface HouseService {
      */
     String checkConcern(int houseNumber, String username);
 
+    /**
+     * 取消关注房源
+     *
+     * @param houseNumber 房屋编号
+     * @param username    用户名
+     * @return 状态
+     */
+    String cancelConcern(int houseNumber, String username);
 
+    /**
+     * 插入房源
+     *
+     * @param house   房屋
+     * @param account 用户名
+     * @return 状态
+     */
+    String insertHouse(House house, String account);
+
+    /**
+     * 保存房屋图片
+     *
+     * @param uploadFiles 房屋图片
+     * @param account     用户名
+     * @return 状态
+     */
+    FileUploadState saveImages(MultipartFile[] uploadFiles, String account);
+
+    /**
+     * 修改房屋信息页面保存房屋图片
+     *
+     * @param uploadFiles 房屋图片
+     * @param houseNum    房屋编号
+     * @return 状态
+     */
+    String saveImagesByHouseNum(MultipartFile[] uploadFiles, int houseNum);
+
+    /**
+     * 删除房屋
+     *
+     * @param account     账号
+     * @param houseNumber 编号
+     * @return 状态
+     */
+    String deleteHouse(String account, int houseNumber);
+
+    /**
+     * 修改房屋
+     *
+     * @param house 房屋
+     * @return 状态
+     */
+    String updateHouse(House house);
+
+    /**
+     * 修改房屋页面删除房屋图片
+     *
+     * @param imageName   图片文件路径
+     * @param houseNumber 房屋编号
+     * @return
+     */
+    String deleteImage(String imageName, int houseNumber);
 }

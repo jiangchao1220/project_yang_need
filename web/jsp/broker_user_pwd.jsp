@@ -15,11 +15,6 @@
             $(".nav li:eq(6)").addClass("navCur");
             var loginUser = "${loginUser}";
             if (loginUser != "") {
-                var isBorker = "${isBorker}";
-                if (isBorker == "borker") {
-                    window.location = "broker_user_pwd.jsp";
-                }
-
                 $("#alogin").append("<a href='user.jsp'>" + loginUser + "</a>");
                 $("#user_phone").append(loginUser);
             } else {
@@ -147,16 +142,18 @@
     <div class="width1190">
         <div class="vip-left">
             <div class="vipNav">
-                <h3 class="vipTitle">会员中心</h3>
+                <h3 class="vipTitle">经纪人中心</h3>
                 <dl>
                     <dt class="vipIcon3">账户设置</dt>
                     <dd>
-                        <a href="user.jsp">我的资料</a>
-                        <a href="user_pwd.jsp" class="vipNavCur">账户密码设置</a>
+                        <a href="broker_user.jsp">我的资料</a>
+                        <a href="broker_user_pwd.jsp" class="vipNavCur">账户密码设置</a>
                     </dd>
                     <dt class="vipIcon1">我的邻居大妈</dt>
                     <dd>
-                        <a href="user_guanzhu.jsp">关注房源</a>
+                        <a href="broker_user_guanzhu.jsp">关注房源</a>
+                        <a href="broker_fabu.jsp">我的发布</a>
+                        <a href="broker_add_house.jsp">添加房源</a>
                         <a href="javascript:;" onclick="loginout()">退出登录</a>
                     </dd>
                 </dl>

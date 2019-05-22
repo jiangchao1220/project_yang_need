@@ -27,10 +27,20 @@ public class House{
     private String houseLocation;
     //发布人
     private String publisher;
+    //发布人联系电话
+    private String publisherPhone;
     //发布时间
     private String publishDate;
 
     public House() {
+    }
+
+    public String getPublisherPhone() {
+        return publisherPhone;
+    }
+
+    public void setPublisherPhone(String publisherPhone) {
+        this.publisherPhone = publisherPhone;
     }
 
     public String getHouseLocation() {

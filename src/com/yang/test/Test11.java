@@ -1,20 +1,22 @@
 package com.yang.test;
 
-import com.yang.entity.House;
-import com.yang.entity.HouseVO;
-import com.yang.entity.IndexHouse;
-import com.yang.entity.User;
+import com.yang.entity.*;
 import com.yang.model.HouseType;
+import com.yang.service.BrokerService;
 import com.yang.service.HouseService;
 import com.yang.service.UserService;
+import com.yang.util.CryptographyUtil;
 import com.yang.util.DateUtil;
+import com.yang.util.FileUtil;
 import com.yang.util.JsonUtil;
 import javafx.scene.input.DataFormat;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import javax.servlet.http.HttpSession;
 import javax.xml.bind.util.JAXBSource;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -22,6 +24,66 @@ import java.util.*;
  * Created by jiang on 2019/3/31.
  */
 public class Test11 {
+    @Test
+    public void fileDelteTest() {
+//        File tempFile = new File("F:\\test" + File.separator + "c.gif");
+//        if (tempFile.exists()) {
+//            tempFile.delete();
+//        }
+        String s = "images\\2019051921482753.jpg";
+        String[] ss = s.split(""+ File.separator + File.separator);
+        System.out.println(ss[1]);
+    }
+
+    @Test
+    public void savrImgTest() {
+        String imgPath = this.getClass().getClassLoader().getResource("").getPath();
+        System.out.println(imgPath);
+        String time = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+        for (int i =0; i<5; i++){
+            int imgRandomNum = (int) (Math.random() * 100);
+            String fileName = time + imgRandomNum;
+            System.out.println(fileName);
+        }
+        int intFlag = (int) (Math.random() * 1000000);
+        System.out.println(intFlag+"**********");
+    }
+
+    @Test
+    public void md5Test() {
+        String md5Str = CryptographyUtil.md5("aa11111");
+        System.out.println(md5Str);
+        String md5Str3 = CryptographyUtil.md5("jc123456");
+        System.out.println(md5Str3);
+        String md5Str4 = CryptographyUtil.md5("321");
+        System.out.println(md5Str4);
+    }
+
+    @Test
+    public void brokerServiceTest() {
+        ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");
+        BrokerService bs = (BrokerService) ac.getBean("brokerServiceImpl");
+//        String broker = bs.borkerLogin("18428327241", "yc12345");
+//        System.out.println(broker);
+//
+//        String broker2 = bs.borkerLogin("18428327111", "yc12345");
+//        System.out.println(broker2);
+//
+//        String broker3 = bs.borkerLogin(null, null);
+//        System.out.println(broker3);
+//
+//        String broker4 = bs.borkerLogin("", "");
+//        System.out.println(broker4);
+    }
+
+    @Test
+    public void brokerUpPwdTest() {
+        ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");
+        BrokerService bs = (BrokerService) ac.getBean("brokerServiceImpl");
+        UserService us = (UserService) ac.getBean("userServiceImpl");
+        us.updatePassword("18428327241", "yc123456");
+    }
+
     //test
     @Test
     public void testr1(){
@@ -30,8 +92,14 @@ public class Test11 {
         UserService us = (UserService) ac.getBean("userServiceImpl");
 //        int s = us.updatePassword("18684016465", "jc994128");
 //        System.out.println(s);
-        String a = hs.concernHouse(1,"123");
-        System.out.println(a);
+//        String a = hs.concernHouse(1,"123");
+        HouseVO houseVO = hs.getHouseDetails(312737);
+        System.out.println(houseVO.getHouse().getPublisher()+" "+houseVO.getHouse().getPublisherPhone());
+        List<HouseVO> houseVOList = hs.findConcernHouses("18684016465");
+        for (HouseVO vo : houseVOList) {
+
+            System.out.println(vo.getHouse().getHouseInfo());
+        }
     }
 
     @Test

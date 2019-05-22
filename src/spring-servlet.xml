@@ -19,6 +19,18 @@
 
     <mvc:annotation-driven/>
 
+    <!--&lt;!&ndash; 配置拦截器 &ndash;&gt;
+    <mvc:interceptors>
+        <mvc:interceptor>
+            &lt;!&ndash; 拦截所有mvc控制器 &ndash;&gt;
+            <mvc:mapping path="/**"/>
+            &lt;!&ndash; mvc:exclude-mapping是另外一种拦截，它可以在你后来的测试中对某个页面进行不拦截，这样就不用在
+                LoginInterceptor的preHandler方法里面获取不拦截的请求uri地址了(优选) &ndash;&gt;
+            &lt;!&ndash;<mvc:exclude-mapping path="/system/login" />&ndash;&gt;
+            <bean class="com.yang.interceptor.LoginInterceptor"></bean>
+        </mvc:interceptor>
+    </mvc:interceptors>-->
+
     <!-- 将无法mapping到Controller的path交给default servlet handler处理 -->
     <!-- 这样会在 SpringMVC 上下文中定义一个 org.springframework.web.servlet.
     resource.DefaultServletHttpRquestHandler，其会对进入 DispatcherServlet
@@ -39,6 +51,16 @@
         <property name="prefix" value="/jsp/"/>
         <property name="suffix" value=".jsp"/>
         <!--可为空,方便实现自已的依据扩展名来选择视图解释类的逻辑 -->
+    </bean>
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- set the max upload size100MB -->
+        <property name="maxUploadSize">
+            <value>104857600</value>
+        </property>
+        <property name="maxInMemorySize">
+            <value>4096</value>
+        </property>
     </bean>
     <!-- 支持JSON数据格式等其他配置，根据项目不同自行配即可 -->
 </beans>

@@ -15,77 +15,44 @@
             $(".nav li:eq(6)").addClass("navCur");
             var loginUser = "${loginUser}";
             if (loginUser != "") {
-                var isBorker = "${isBorker}";
-                if (isBorker == "borker") {
-                    window.location = "broker_user_pwd.jsp";
-                }
-
                 $("#alogin").append("<a href='user.jsp'>" + loginUser + "</a>");
-                $("#user_phone").append(loginUser);
+                $("#phone").empty();
+                $("#phone").text(loginUser);
+                //加载个人信息
+                loadUserInfo(loginUser);
             } else {
                 $("#alogin").append("<a href='login.jsp'>登录</a>");
-                $("#user_phone").append("您还没有登录");
             }
         })
 
-        var pwdverify = /^[a-zA-Z]{1}([a-zA-Z0-9]|[._]){5,17}$/;
-
-        function sub_username() {
-            var loginCheck = "${loginUser}";
-            if (loginCheck == null) {
-                alert("请先登录!");
-                return;
-            }
-            $("#comfirm").empty();
-            $("#checkpwd").empty();
-            var newpassword = $("#new_password").val();
-            var comfirmpwd = $("#comfirm_password1").val();
-            if (validate(newpassword) && comfirmValidate(newpassword, comfirmpwd)) {
-                // 两次密码一致校验通过
-                updatePwd(newpassword);
-            } else {
-                return;
-            }
-        }
-
-        function comfirmValidate(newpassword, comfirmpwd) {
-            if (newpassword != comfirmpwd) {
-                $("#comfirm").append("密码不一致");
-                return false;
-            } else {
-                return true;
-            }
-        }
-
-        function validate(pwd) {
-            //校验不够严格,全字母可以通过校验
-            if (pwdverify.test(pwd)) {
-                return true;
-            }
-            else {
-                $("#checkpwd").append("请以字母开头，长度在6~18之间，只能包含字母、数字和下划线");
-                return false;
-            }
-        }
-
-        function updatePwd(newpwd) {
-            var newPasswoed = {
-                "password": newpwd,
+        function loadUserInfo(username) {
+            var userInfo = {
+                "username": username,
             };
             $.ajax({
                 type: "GET",
-                url: "updatePwssword.do",
+                url: "loadBrokerUserInfo.do",
                 contentType: "application/json;charset=UTF-8",
-                data: newPasswoed,
+                data: userInfo,
                 dataType: "JSON",
                 success: function (data) {
-                    if (data == 1) {
-                        //修改成功
-                        alert("密码修改成功,请重新登录");
-                        window.location = "login.jsp";
-                    } else {
-                        alert("密码修改失败,请稍后重试");
+                    if (data == null) {
+                        return;
                     }
+                    switch (data.sex) {
+                        case "女":
+                            console.log("m")
+                            $("#rbSex1").prop("checked", true);
+                            break;
+                        case "男":
+                            console.log("f")
+                            $("#rbSex2").prop("checked", true);
+                            break;
+                    }
+                    $("#title").val(data.name);
+                    $("#age").val(data.age);
+                    $("#qq").val(data.phone);
+                    $("#sign").val(data.info);
                 }, error: function () {
                     alert("ajax error!");
                 }
@@ -108,7 +75,7 @@
                             alert("安全退出登录成功.");
                             $("#alogin").empty();
                             $("#alogin").append("<a href='login.jsp'>登录</a>");
-                            window.location = "user_pwd.jsp";
+                            window.location = "user.jsp";
                         } else {
                             alert("您还未登录!");
                         }
@@ -117,6 +84,40 @@
                     }
                 });
             }
+        }
+
+        function mod_member() {
+            var username = "${loginUser}";
+            if (username == "") {
+                alert("请登陆后操作!");
+                return;
+            }
+            var sex = $('input[name="sex"]:checked').val();
+            var name = $("#title").val();
+            var age = $("#age").val();
+            var phone = $("#qq").val();
+            var signtext = $("#sign").val();
+
+            var userInfo = {
+                "accout": username,
+                "phone": phone,
+                "sex": encodeURI(sex),
+                "name": encodeURI(name),
+                "age": age,
+                "info": encodeURI(signtext),
+            };
+            $.ajax({
+                type: "POST",
+                url: "brokeruserinfo.do",
+                contentType: "application/x-www-form-urlencoded;charset=UTF-8",
+                data: userInfo,
+                dataType: "JSON",
+                success: function (data) {
+                    alert(data);
+                }, error: function () {
+                    alert("ajax error!");
+                }
+            });
         }
     </script>
 </head>
@@ -147,16 +148,18 @@
     <div class="width1190">
         <div class="vip-left">
             <div class="vipNav">
-                <h3 class="vipTitle">会员中心</h3>
+                <h3 class="vipTitle">经纪人中心</h3>
                 <dl>
                     <dt class="vipIcon3">账户设置</dt>
                     <dd>
-                        <a href="user.jsp">我的资料</a>
-                        <a href="user_pwd.jsp" class="vipNavCur">账户密码设置</a>
+                        <a href="broker_user.jsp" class="vipNavCur">我的资料</a>
+                        <a href="broker_user_pwd.jsp">账户密码设置</a>
                     </dd>
                     <dt class="vipIcon1">我的邻居大妈</dt>
                     <dd>
-                        <a href="user_guanzhu.jsp">关注房源</a>
+                        <a href="broker_user_guanzhu.jsp">关注房源</a>
+                        <a href="broker_fabu.jsp">我的发布</a>
+                        <a href="broker_add_house.jsp">添加房源</a>
                         <a href="javascript:;" onclick="loginout()">退出登录</a>
                     </dd>
                 </dl>
@@ -167,35 +170,55 @@
             <table class="grinfo">
                 <tbody>
                 <tr>
-                    <th>原手机号：</th>
-                    <td><strong id="user_phone"></strong></td>
-                </tr>
-                <%--<tr>
                     <th>账号：</th>
-                    <td><input class="inp inw" type="text" id="new_username" maxlength="15" placeholder="不少于3位中英文即可"
-                               value="" onkeyup="return only_py_num(this)">
-
-                    </td>
-                </tr>--%>
+                    <td><strong id="phone">未登录</strong></td>
+                </tr>
                 <tr>
-                    <th>新密码：</th>
+                    <th><span class="red">*</span> 姓名：</th>
                     <td>
-                        <input class="inp inw" type="password" id="new_password" placeholder="不少于6位">
-                        <a id="checkpwd"></a>
+                        <input class="inp inw" type="text" id="title" value="" maxlength="14">
                     </td>
                 </tr>
                 <tr>
-                    <th>重复新密码：</th>
+                    <th><span class="red">*</span> 性 &nbsp; &nbsp;别：</th>
                     <td>
-                        <input class="inp inw" type="password" id="comfirm_password1" placeholder="不少于6位">
-                        <a id="comfirm"></a>
+                        <input type="radio" value="女" id="rbSex1" name="sex">
+                        <label for="rbSex1">女</label>
+                        <input type="radio" value="男" id="rbSex2" name="sex">
+                        <label for="rbSex2">男</label>
+                        <span id="Sex_Tip"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <th><span class="red"></span> 年 &nbsp; &nbsp;龄：</th>
+                    <td>
+                        <input class="inp inw" type="text" id="age" value="0"
+                               onkeyup="this.value=this.value.replace(/[^\d]/g,'')">
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <th>电话：</th>
+                    <td>
+                        <input class="inp inw" type="text" maxlength="15" value="" id="qq"
+                               onkeyup="this.value=this.value.replace(/[^\d]/g,'')">
+                    </td>
+                </tr>
+
+                <tr>
+                    <th valign="top">个人简介：</th>
+                    <td>
+                        <textarea id="sign" class="grtextarea"></textarea>
+                        <br>
+                        <span class="fgrey">(128字符以内)</span>
                     </td>
                 </tr>
                 <tr>
                     <th>&nbsp;</th>
                     <td colspan="2">
                         <label class="butt" id="butt">
-                            <div class="member_mod_buttom" onclick="sub_username()">完成修改</div>
+                            <input type="submit" class="member_mod_buttom" onclick="mod_member()" value="完成修改"/>
                         </label>
                     </td>
                 </tr>
@@ -208,8 +231,8 @@
 
 <div class="footer">
     <div class="width1190">
-        <div class="fl"><a href="index.jsp"><strong>邻居大妈</strong></a><a href="about.html">关于我们</a><a
-                href="contact.html">联系我们</a><a href="user.jsp">个人中心</a></div>
+        <div class="fl"><a href="index.html"><strong>邻居大妈</strong></a><a href="about.html">关于我们</a><a
+                href="contact.html">联系我们</a><a href="user.html">个人中心</a></div>
         <div class="fr">
             <dl>
                 <dt><img src="images/erweima.png" width="76" height="76"/></dt>

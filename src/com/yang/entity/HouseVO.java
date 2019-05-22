@@ -8,8 +8,17 @@ import java.util.List;
 public class HouseVO implements Comparable<HouseVO>{
     private House house;
     private List<String> houseImages;
+    private int concernNum;
 
     public HouseVO() {
+    }
+
+    public int getConcernNum() {
+        return concernNum;
+    }
+
+    public void setConcernNum(int concernNum) {
+        this.concernNum = concernNum;
     }
 
     public House getHouse() {

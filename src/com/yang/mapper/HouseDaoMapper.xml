@@ -30,6 +30,7 @@
 		<result column="location" jdbcType="VARCHAR" property="houseLocation" />
 		<result column="publisher" jdbcType="VARCHAR" property="publisher" />
 		<result column="publish_date" jdbcType="VARCHAR" property="publishDate" />
+		<result column="publisher_phone" jdbcType="VARCHAR" property="publisherPhone" />
 	</resultMap>
 
 	<select id="findHouseByType" resultMap="BaseHouseMap">
@@ -60,9 +61,87 @@
 		DELETE from user_concern WHERE username=#{arg0} AND house_number=#{arg1}
 	</delete>
 
+	<delete id="deleteConcernData">
+		DELETE from user_concern WHERE house_number=#{arg0}
+	</delete>
+
+	<delete id="deleteBrokerHouseData">
+		DELETE from broker_house WHERE house_number=#{arg0}
+	</delete>
+
+	<delete id="deleteHouseData">
+		DELETE from house WHERE house_number=#{arg0}
+	</delete>
+
 	<select id="findConcern" resultType="com.yang.entity.ConcernHouse">
 		SELECT * FROM `user_concern` WHERE username=#{arg0} AND house_number=#{arg1}
 	</select>
+
+	<select id="findAllConcernHouseNumber" resultType="int">
+		SELECT house_number FROM `user_concern` WHERE username=#{arg0}
+	</select>
+
+	<select id="findAllPublishHouseNumber" resultType="int">
+		SELECT house_number FROM `broker_house` WHERE broker_accout=#{arg0}
+	</select>
+
+	<select id="findAllConcernNum" resultType="int">
+		SELECT COUNT(id) FROM user_concern WHERE house_number=#{arg0}
+	</select>
+
+	<select id="checkNewHouseNumber" resultType="int">
+		SELECT COUNT(house_number) FROM house WHERE house_number=#{arg0}
+	</select>
+
+	<select id="findAllConcernHouse" parameterType="java.util.List" resultMap="HouseMap">
+		SELECT * FROM `house` WHERE house_number IN
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+	<delete id="delteImages">
+		DELETE from img WHERE house_number=#{arg0}
+	</delete>
+
+	<insert id="insertImages" parameterType="com.yang.entity.Image">
+		INSERT INTO img(house_number, img_path)
+		VALUES
+		<foreach item="item" index="index" collection="list" separator =",">
+			(#{item.houseNumber},#{item.imgPath})
+		</foreach>
+	</insert>
+
+	<insert id="insertHouse" parameterType="com.yang.entity.House">
+		INSERT INTO house
+		(house_number, house_info, house_price, house_type,house_area,house_towards,
+		house_floor,house_decorationtype,house_address,type,house_details,introduced,location,publisher,
+		publisher_phone,publish_date)
+		VALUES
+		(#{houseNumber},#{houseInfo},#{housePrice},#{houseType},#{houseArea},#{houseTowards},#{houseFloor},
+		#{houseDecorationtype},#{houseAddress},#{type},#{houseDetails},#{introduced},#{houseLocation},#{publisher},
+		#{publisherPhone},#{publishDate})
+	</insert>
+
+	<update id="updateHouse" parameterType="com.yang.entity.House">
+		UPDATE house SET
+		 house_info=#{houseInfo}, house_price=#{housePrice},
+		 house_type=#{houseType},house_area=#{houseArea},
+		 house_towards=#{houseTowards},house_floor=#{houseFloor},
+		 house_decorationtype=#{houseDecorationtype},house_address=#{houseAddress},
+		 type=#{type},house_details=#{houseDetails},
+		 introduced=#{introduced},location=#{houseLocation}
+		WHERE
+		house_number=#{houseNumber}
+	</update>
+
+	<insert id="bindBrokerHouse">
+		INSERT INTO broker_house(broker_accout, house_number) VALUES (#{arg0},#{arg1})
+	</insert>
+
+	<delete id="deleteImage">
+		DELETE from img WHERE img_path=#{arg0} AND house_number=#{arg1}
+	</delete>
 
 </mapper>
 
