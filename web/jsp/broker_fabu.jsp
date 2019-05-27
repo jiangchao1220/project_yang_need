@@ -204,13 +204,13 @@
                 <div class="clearfix"></div>
             </ul><!--guanzhueq/-->
             <div id="zufang" class="guanzhulist">
-                <p id="zufanginfo">您还没有关注的出租房屋......</p>
+                <p id="zufanginfo">您还没有发布的出租房屋......</p>
             </div><!--guanzhulist/-->
             <div id="xinfang" class="guanzhulist">
-                <p id="xinfanginfo">您还没有关注的房屋......</p>
+                <p id="xinfanginfo">您还没有发布的新房屋......</p>
             </div><!--guanzhulist/-->
             <div id="ershoufang" class="guanzhulist">
-                <p id="ershoufanginfo">您还没有关注的二手房屋......</p>
+                <p id="ershoufanginfo">您还没有发布的二手房屋......</p>
             </div><!--guanzhulist/-->
         </div><!--vip-right/-->
         <div class="clearfix"></div>

@@ -62,7 +62,7 @@ public class BrokerServiceImpl implements BrokerService {
 
     @Override
     public String insertBrokerAccout(String accout, String password, String sex, String realName, String contextPhone) {
-        Broker broker = new Broker(accout,password,contextPhone,realName,sex);
+        Broker broker = new Broker(accout,CryptographyUtil.md5(password),contextPhone,realName,sex);
         int insertNum = brokerDao.insertBroker(broker);
         if (insertNum == 1) {
             return "success";
